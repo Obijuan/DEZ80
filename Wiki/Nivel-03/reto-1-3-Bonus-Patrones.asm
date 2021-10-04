@@ -1,4 +1,4 @@
-;; Reto 1.3: Suelo de tiles  
+;; Reto 1.3: Suelo de tiles  (BONUS: Patrones)
 
 org #4000
 run #4000
@@ -56,11 +56,15 @@ ld (hl), #02
 
 ;;-- Dibujar el rail
 
-ld a, #50  ;; Contador para repeticion
-
 ld l, #60  ;; Posicion inicial
 
+ld b,#8  ;;-- Contador para repetir patron
+
+patron:
+  ld a, #9  ;; Contador para repeticion
+
 repetir:
+  ;;-- Dibujar rail normal
   ld h, #c4
   ld (hl), #5F
 
@@ -76,6 +80,24 @@ repetir:
   inc hl
   dec a
   jr nz, repetir
+
+;;-- Dibujar rail roto
+ld h,#c4
+ld (hl), #00
+
+ld h,#00
+ld (hl), #04
+
+ld h, #D4
+ld (hl), #06
+
+ld h, #DC
+ld (hl), #05
+
+inc hl
+dec b
+jr nz, patron
+
 
 ;--- Terminar
 jr $
