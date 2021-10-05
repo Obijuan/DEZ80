@@ -21,16 +21,16 @@ dibuja_cara_A:
 
   ld hl, #C000  ;; Posicion donde dibujar la cara
 
-  dec a  ;; Restar 1 a A
+  dec a           ;; Restar 1 a A
   jr z, era_un_1  ;-- Si A-1 = 0,entonces saltar
 
   ;;-- Comprobar si es 2
-  dec a  ;;-- Restar 1 a A
+  dec a           ;;-- Restar 1 a A
   jr z, era_un_2  ; Si A-2 = 0, saltar
 
  ;;-- Es > 2
  ;; Comprobar si es 3
- dec a ;; Restar 1 a A
+ dec a           ;; Restar 1 a A
  jr z, era_un_3  ; Si A-3 = 0, saltar
 
   ;; Es > 3
@@ -69,7 +69,7 @@ fin:
   ret
 
 
-;;;;;;;;;;;;;;;;;;;;;;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Dibuja un dado mostrando la cara 1, en la posicion 
 ;; en que se encuentra HL, asumiendo que esta en 
 ;; la primera fila de caracteres de pantalla (C000-C04A)
