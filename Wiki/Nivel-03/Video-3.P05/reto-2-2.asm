@@ -51,7 +51,7 @@ jr $
 ;; sobre el rail para eliminar vagonetas anteriores
 ;;
 ;; MODIFICA:
-;;   hl
+;;   hl,A
 ;;=====================================
 borrar_vagonetas:
   ld hl, #C410
