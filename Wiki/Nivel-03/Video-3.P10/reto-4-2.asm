@@ -1,4 +1,4 @@
-;; Reto 4.1: Mover a la derecha
+;; Reto 4.2: Mover a la izquierda
 
 org #4000
 run main
@@ -15,6 +15,9 @@ tecla_reset:
 
 tecla_derecha:
   db  27 ;; Tecla P
+
+tecla_izquierda:
+  db 34  ;; Tecla O
 
 vagoneta_home:
   dw #C410
@@ -61,30 +64,97 @@ main:
   ;;-- Bucle principal
   bucle_main:
     
+     ;;-- Comprobar las teclas pulsadas
+     call leer_teclas
+     
+     ;;-- Saltar al comienzo si el flag z NO esta activado
+     ;;-- (Esto ocurre cuando se aprieta la tecla de reset)
+     jr nz,main
+    
+     ;;-- Continuar con el bucle principal
+     jr bucle_main
+   
+
+;;========================================
+;;  Rutina de teclado. Comprobar que teclas se han pulsado  
+;; y llamar a las rutinas correspondientes
+;;========================================
+leer_teclas:
+
      ;;-- Comprobar tecla ir a la derecha
      ld a, (tecla_derecha)
      call #BB1E
      jr nz, mover_derecha
+
+     ;;-- Comprobar tecla ir a la izquierda
+     ld a, (tecla_izquierda)
+     call #BB1E
+     jr nz, mover_izquierda
 
      ;;-- Comprobar tecla de reinicio
      ld a, (tecla_reset)
      call #BB1E
      jr nz, reiniciar
 
-     jr bucle_main
+     ;;-- Terminar
+     jr leer_teclas_fin
 
   ;;-- Reiniciar el juego
   reiniciar:
-    ;;-- Saltar al comienzo
-    jr main
+    or a  ;;-- Poner flag z a 0
+    jr leer_teclas_fin
+
+  ;;-- Mover a la izquierda
+  mover_izquierda:
+    call vagoneta_izquierda
+    jr flag_z_set
 
   ;;-- Mover a la derecha
   mover_derecha:
      call vagoneta_derecha
-    
-     ;;-- Continuar con el bucle principal
-     jr bucle_main
-   
+
+flag_z_set:
+  xor a ;;-- Poner flag z a 1
+
+  ;;-- Fin de la rutina
+leer_teclas_fin:
+
+  ret
+
+;;========================================
+;; Mover la vagoneta 4 pixeles a la izquierda
+;;
+;; MODIFICA:
+;;   HL, B, A
+;;========================================
+vagoneta_izquierda:
+
+    ;;-- Recuperar posicion de la vagoneta
+    ld hl, (pos_vagoneta_video)
+
+    ;;-- Borrar la vagoneta
+    call borrar_sprite_8x8
+
+    ;;-- Decrementar la posicion
+    dec hl
+
+    ;;-- Dibujar la vagoneta en la nueva posicion
+    call dibujar_vagoneta
+
+    ;;-- Guardar la posicion de la vagoneta
+    ld (pos_vagoneta_video), hl
+
+    ;;-- Esperar
+    ld b, #6
+    call wait
+
+    ;;-- Una posicion menos
+    ld a, (pos_vagoneta)
+    dec a
+    ld (pos_vagoneta),a
+
+  ret
+
 
 ;;========================================
 ;; Mover la vagoneta 4 pixeles a la derecha
