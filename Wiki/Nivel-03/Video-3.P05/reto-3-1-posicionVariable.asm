@@ -1,4 +1,5 @@
 ;; Reto 3.1: Barril 4x8
+;; BONUS: Posicion variable
 
 org #4000
 run main
@@ -16,15 +17,18 @@ tecla_reset:
 vagoneta_home:
   dw #C410
 
+;;-- Direccion de memoria donde colocar barril
 barril_home:
   dw #0000
 
+;;-- Posicion del barril en la fila
 x_inicio:
-  db #20
+  db #30
 
 main:
 
   ;; Calcular la posicion del barril
+  ;; barril_home = #C410 + x_inicio
   ld hl,#C410
   ld a, (x_inicio)
   add l  ;; A = x_inicio + L
@@ -162,7 +166,10 @@ borrar_vagonetas:
 animar_vagoneta:
 
   ;;-- Contador de repeticiones
-  ld a, #28
+  ;;-- Posicion: x_inicio - 2
+  ld a, (x_inicio)
+  dec a
+  dec a
 
   ;;-- Bucle de animacion
   next_pos:
