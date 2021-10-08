@@ -83,6 +83,10 @@ main:
    ;;-- Bucle principal
    main_loop:
 
+      ;;-- Comprobar colisiones
+      call comprobar_colisiones
+      jr z, muerto
+
       ;;-- Comprobar tecla de RESET
       ld a, (tecla_reset)
       call #BB1E
@@ -151,6 +155,263 @@ main:
       call mover_hero
       jr main_loop
 
+  ;;-- Estado de muerte: Se espera hasta que se pulse R para
+  ;;-- reiniciar el juego
+  muerto:
+
+    ;;-- Comprobar tecla de RESET
+    ld a, (tecla_reset)
+    call #BB1E
+    jp nz, main
+    
+    jr muerto
+
+
+;;============================================
+;; Comprobar si se ha chocado con algun barril. Si es asi
+;; se genera la explosion
+;; SALIDA:
+;;   Z se pone a 1 si hay colision
+;;   Z se pone a 0 si no hay colision
+;;=============================================
+comprobar_colisiones:
+  
+  ;;-- Barril 1
+  ;; Si barril1_pos == hero_pos, Hay colision!
+  ld a,(barril1_pos)
+  ld b,a
+  ld a,(hero_pos)
+  cp b
+  jr z, colision
+
+  ;;-- Barril 2
+  ld a,(barril2_pos)
+  ld b,a
+  ld a,(hero_pos)
+  cp b
+  jr z, colision
+
+  ;;-- Barril 4
+  ld a,(barril4_pos)
+  ld b,a
+  ld a,(hero_pos)
+  cp b
+  jr z, colision
+
+  ;;-- Barril 3
+  ld a,(barril3_pos)
+  ld b,a
+  ld a,(hero_pos)
+  cp b
+  jr z, colision
+
+  ;;-- No hay colision con ningun barril
+
+  ;;-- Poner z a 0
+  ld a,1
+  or a
+  jr colision_fin
+
+  ;;-- Ha habido una colision
+  colision:
+
+    call calcular_pos
+    call dibujar_explosion_1    
+
+    ld b,#20
+    call wait
+
+    ;;-- Fotograma 2
+    call dibujar_explosion_2
+
+    ld b,#20
+    call wait
+
+    ;;-- Fotograma 3
+    call dibujar_explosion_3
+
+    ld b,#20
+    call wait
+
+    ;;-- Fotograma 4 (Blanco)
+    call borrar_sprite_8x8
+
+    xor a ;-- Poner z a 1
+
+  colision_fin:
+  ret
+
+;;========================================
+;; Dibujar fotograma 3 explosion
+;;
+;;========================================
+dibujar_explosion_3:
+  ;;-- Fila 1
+  ld (hl), #77  ;;-- Izquierdo
+  inc hl
+  ld (hl), #EE  ;;-- Derecho
+
+  ;;-- Fila 2
+  ld h, #CC
+  ld (hl), #55  ;;-- Derecho
+  dec hl
+  ld (hl), #AA  ;;-- Izquierdo
+
+  ;;-- Fila 3
+  ld h, #D4
+  ld (hl), #CC  ;;-- Izquierdo
+  inc hl
+  ld (hl), #33  ;;-- Derecho
+
+  ;;-- Fila 4
+  ld h, #DC
+  ld (hl), #11  ;;-- Derecho
+  dec hl
+  ld (hl), #88  ;;-- Izquierdo
+
+ ;;-- Fila 5
+  ld h, #E4
+  ld (hl), #88 ;;-- Izquierdo
+  inc hl
+  ld (hl), #11  ;;-- Derecho
+
+  ;;-- Fila 6
+  ld h, #EC
+  ld (hl), #33  ;;-- Derecho
+  dec hl
+  ld (hl), #CC  ;;-- Izquierdo
+
+  ;;-- Fila 7
+  ld h, #F4
+  ld (hl), #AA  ;;-- Izquierdo
+  inc hl
+  ld (hl), #55  ;;-- Derecho
+
+  ;;-- Fila 8
+  ld h, #FC
+  ld (hl), #EE  ;;-- Derecho
+  dec hl
+  ld (hl), #77  ;;-- Izquierdo
+
+  ;;-- Volver a fila 1
+  ld h, #C4
+
+  ret
+
+
+
+;;========================================
+;; Dibujar fotograma 2 explosion
+;;
+;;========================================
+dibujar_explosion_2:
+  ;;-- Fila 1
+  ld (hl), #F8  ;;-- Izquierdo
+  inc hl
+  ld (hl), #F1  ;;-- Derecho
+
+  ;;-- Fila 2
+  ld h, #CC
+  ld (hl), #FA  ;;-- Derecho
+  dec hl
+  ld (hl), #F5  ;;-- Izquierdo
+
+  ;;-- Fila 3
+  ld h, #D4
+  ld (hl), #D1  ;;-- Izquierdo
+  inc hl
+  ld (hl), #B8  ;;-- Derecho
+
+  ;;-- Fila 4
+  ld h, #DC
+  ld (hl), #76  ;;-- Derecho
+  dec hl
+  ld (hl), #E6  ;;-- Izquierdo
+
+ ;;-- Fila 5
+  ld h, #E4
+  ld (hl), #E6 ;;-- Izquierdo
+  inc hl
+  ld (hl), #76  ;;-- Derecho
+
+  ;;-- Fila 6
+  ld h, #EC
+  ld (hl), #B8  ;;-- Derecho
+  dec hl
+  ld (hl), #D1  ;;-- Izquierdo
+
+  ;;-- Fila 7
+  ld h, #F4
+  ld (hl), #F5  ;;-- Izquierdo
+  inc hl
+  ld (hl), #FA  ;;-- Derecho
+
+  ;;-- Fila 8
+  ld h, #FC
+  ld (hl), #F1  ;;-- Derecho
+  dec hl
+  ld (hl), #F8  ;;-- Izquierdo
+
+  ;;-- Volver a fila 1
+  ld h, #C4
+
+  ret
+
+;;========================================
+;; Dibujar fotograma 1 explosion
+;;
+;;========================================
+dibujar_explosion_1:
+  ;;-- Fila 1
+  ld (hl), #80  ;;-- Izquierdo
+  inc hl
+  ld (hl), #10  ;;-- Derecho
+
+  ;;-- Fila 2
+  ld h, #CC
+  ld (hl), #E2  ;;-- Derecho
+  dec hl
+  ld (hl), #74  ;;-- Izquierdo
+
+  ;;-- Fila 3
+  ld h, #D4
+  ld (hl), #72  ;;-- Izquierdo
+  inc hl
+  ld (hl), #E4  ;;-- Derecho
+
+  ;;-- Fila 4
+  ld h, #DC
+  ld (hl), #E8  ;;-- Derecho
+  dec hl
+  ld (hl), #71  ;;-- Izquierdo
+
+ ;;-- Fila 5
+  ld h, #E4
+  ld (hl), #71  ;;-- Izquierdo
+  inc hl
+  ld (hl), #E8  ;;-- Derecho
+
+  ;;-- Fila 6
+  ld h, #EC
+  ld (hl), #E4  ;;-- Derecho
+  dec hl
+  ld (hl), #72  ;;-- Izquierdo
+
+  ;;-- Fila 7
+  ld h, #F4
+  ld (hl), #74  ;;-- Izquierdo
+  inc hl
+  ld (hl), #E8  ;;-- Derecho
+
+  ;;-- Fila 8
+  ld h, #FC
+  ld (hl), #10  ;;-- Derecho
+  dec hl
+  ld (hl), #80  ;;-- Izquierdo
+
+  ;;-- Volver a fila 1
+  ld h, #C4
+  ret
 
 ;;=============================================
 ;;  Dibujar todos los barriles a partir de sus variables
@@ -617,6 +878,70 @@ borrar_sprite_4x8:
   ;;-- Establecer la posicion de partida en HL
   ld h, #C4   
   ret
+
+;;-----------------------------------------------------------
+;; Borrar el sprite 8x8 situado en la posicion dada
+;; por HL
+;;
+;; ENTRADAS: 
+;;   HL: Posicion donde borrar (Memoria video)
+;;
+;; MODIFICA:
+;; -
+;;------------------------------------------------------------
+borrar_sprite_8x8:
+
+   ;;-- Fila 1
+  ld (hl), #00  ;-- Izquierda
+  inc hl
+  ld (hl), #00  ;-- Derecha
+
+  ;;-- Fila 2
+  ld h,#CC
+  ld (hl),#00  ;-- Derecha
+  dec hl
+  ld (hl),#00 ; -- Izquierda
+  
+  ;;-- Fila 3
+  ld h, #D4
+  ld (hl), #00  ;-- Izquierda
+  inc hl
+  ld (hl), #00  ;-- Derecha
+
+  ;;-- Fila 4
+  ld h, #DC
+  ld (hl), #00  ;-- Derecha
+  dec hl
+  ld (hl), #00  ;-- Izquierda
+
+  ;;-- Fila 5
+  ld h, #E4
+  ld (hl), #00  ;-- Izquierda
+  inc hl
+  ld (hl), #00 ;-- Derecha
+
+  ;;-- Fila 6
+  ld h, #EC
+  ld (hl), #00  ;-- Derecha
+  dec hl
+  ld (hl), #00  ;-- Izquierda
+
+  ;;-- Fila 7
+  ld h, #F4  ;-- Izquierda
+  ld (hl), #00
+  inc hl
+  ld (hl), #00  ;-- Derecha
+  
+  ;;-- Fila 8
+  ld h, #FC  ;-- Derecha
+  ld (hl), #00
+  dec hl
+  ld (hl), #00 ;-- Izquierda
+
+  ;;-- Establecer la posicion de partida en HL
+  ld h, #C4   
+  ret
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Dibujar el suelo. Esta compuesto por 160 
