@@ -17,6 +17,19 @@ db 0
 hero_dir:
 db 0
 
+;;-- Posiciones de los barriles
+barril1_pos:
+db 0
+
+barril2_pos:
+db 0
+
+barril3_pos:
+db 0
+
+barril4_pos:
+db 0
+
 tecla_reset:
   db 50  ;;-- 50: Tecla R
 
@@ -41,6 +54,16 @@ main:
   ld a, 1
   ld (hero_dir),a
 
+  ;;-- Posiciones iniciales de los barriles
+  ld a,10
+  ld (barril1_pos),a
+  ld a,17
+  ld (barril2_pos),a
+  ld a,50
+  ld (barril3_pos),a
+  ld a,60
+  ld (barril4_pos),a
+
    ;;-- Borrar el escenario anterior
    call borrar_escenario
 
@@ -49,6 +72,9 @@ main:
 
    ;; Dibujar personaje
    call dibujar_hero
+
+   ;; Dibujar barriles
+   call dibujar_barriles
 
     ;;-- Pausa inicial
     ld b, #80
@@ -105,7 +131,6 @@ main:
       jr z, main_loop
 
       ;-- Mover a la izquierda
-      ld b,#FF  ;;  (b=-1)
       call mover_hero
       jr main_loop
 
@@ -123,9 +148,86 @@ main:
       jr z, main_loop
 
       ;;-- Mover a la derecha
-      ld b,#1
       call mover_hero
       jr main_loop
+
+
+;;=============================================
+;;  Dibujar todos los barriles a partir de sus variables
+;;  * barril1_pos
+;;  * barril2_pos
+;;  * barril3_pos
+;;  * barril4_pos
+;;=============================================
+dibujar_barriles:
+
+  ;;-- Barril 1
+  ld a,(barril1_pos)
+  call calcular_pos
+  call dibujar_barril
+
+  ;;-- Barril 2
+  ld a,(barril2_pos)
+  call calcular_pos
+  call dibujar_barril
+
+;;-- Barril 3
+  ld a,(barril3_pos)
+  call calcular_pos
+  call dibujar_barril
+
+;;-- Barril 4
+  ld a,(barril4_pos)
+  call calcular_pos
+  call dibujar_barril
+
+  ret
+
+;========================================
+;; Dibujar barril en la memoria de video indicada por HL
+;;
+;; ENTRADA:
+;;   HL: Posicion del barril en memoria de video
+;;
+;; MODIFICA:
+;;
+;;========================================
+dibujar_barril:
+
+   ;;-- Fila 1
+  ld (hl), #99
+
+  ;;-- Fila 2
+  ld h,#CC
+  ld (hl),#6F
+  
+  ;;-- Fila 3
+  ld h, #D4
+  ld (hl), #9F  
+
+  ;;-- Fila 4
+  ld h, #DC
+  ld (hl), #FF  
+
+  ;;-- Fila 5
+  ld h, #E4
+  ld (hl), #6F
+
+  ;;-- Fila 6
+  ld h, #EC
+  ld (hl), #9F  
+
+  ;;-- Fila 7
+  ld h, #F4 
+  ld (hl), #F6
+  
+  ;;-- Fila 8
+  ld h, #FC
+  ld (hl), #60
+
+  ;;-- Establecer la posicion de partida en HL
+  ld h, #C4   
+  ret
 
 
 ;;========================================
@@ -206,7 +308,7 @@ mover_hero:
     ;;-- Borrar personaje anterior
     ld a,(hero_pos)
     call calcular_pos
-    call borrar_sprite_8x8
+    call borrar_sprite_4x8
 
     ;;-- Actualizar posicion personaje
     ;;-- hero_pos = hero_pos + hero_dir
@@ -456,14 +558,13 @@ borrar_escenario:
   ld hl, #C410
 
   ;;-- En la linea hay 40 caracteres
-  ld a, 40
+  ld a, 80
   borrar_next:
 
     ;;-- Borrar la posicion actual
-    call borrar_sprite_8x8:
+    call borrar_sprite_4x8:
 
-    ;;-- Incrementar hl en 2 para apuntar al siguiente sprinte
-    inc hl
+    ;;-- Incrementar hl para apuntar al siguiente sprinte
     inc hl
 
     dec a
@@ -472,7 +573,7 @@ borrar_escenario:
   ret
 
 ;;-----------------------------------------------------------
-;; Borrar el sprite 8x8 situado en la posicion dada
+;; Borrar el sprite 4x8 situado en la posicion dada
 ;; por HL
 ;;
 ;; ENTRADAS: 
@@ -481,54 +582,37 @@ borrar_escenario:
 ;; MODIFICA:
 ;; -
 ;;------------------------------------------------------------
-borrar_sprite_8x8:
+borrar_sprite_4x8:
 
    ;;-- Fila 1
-  ld (hl), #00  ;-- Izquierda
-  inc hl
-  ld (hl), #00  ;-- Derecha
-
+  ld (hl), #00  
+  
   ;;-- Fila 2
   ld h,#CC
-  ld (hl),#00  ;-- Derecha
-  dec hl
-  ld (hl),#00 ; -- Izquierda
+  ld (hl),#00 
   
   ;;-- Fila 3
   ld h, #D4
-  ld (hl), #00  ;-- Izquierda
-  inc hl
-  ld (hl), #00  ;-- Derecha
+  ld (hl), #00  
 
   ;;-- Fila 4
   ld h, #DC
-  ld (hl), #00  ;-- Derecha
-  dec hl
-  ld (hl), #00  ;-- Izquierda
+  ld (hl), #00  
 
   ;;-- Fila 5
   ld h, #E4
-  ld (hl), #00  ;-- Izquierda
-  inc hl
-  ld (hl), #00 ;-- Derecha
+  ld (hl), #00 
 
   ;;-- Fila 6
   ld h, #EC
-  ld (hl), #00  ;-- Derecha
-  dec hl
-  ld (hl), #00  ;-- Izquierda
-
+  ld (hl), #00  
   ;;-- Fila 7
-  ld h, #F4  ;-- Izquierda
+  ld h, #F4  
   ld (hl), #00
-  inc hl
-  ld (hl), #00  ;-- Derecha
   
   ;;-- Fila 8
-  ld h, #FC  ;-- Derecha
+  ld h, #FC  
   ld (hl), #00
-  dec hl
-  ld (hl), #00 ;-- Izquierda
 
   ;;-- Establecer la posicion de partida en HL
   ld h, #C4   
