@@ -113,6 +113,9 @@ main:
    dar_patada:
      call dibujar_hero_patada
 
+     ;;-- Comprobar la patada
+     call comprobar_patada
+
      ld b,#20  ;;-- Wait
      call wait
 
@@ -165,6 +168,209 @@ main:
     jp nz, main
     
     jr muerto
+
+
+;;=======================================
+;; Comprobar si la patada ha dado a un barril o no
+;;=======================================
+comprobar_patada:
+
+  ;;-- Si la posicion actual del persona le sumamos su
+  ;;-- direccion (+1, -1) y es igual a la posicion de un barrill...
+  ;;-- entonces ese barril debe morir!!!!
+
+  ;;-- Leer orientacion  
+  ld a,(hero_dir)
+  ld b,a
+  ;;-- Leer posicion actua
+  ld a,(hero_pos)
+  ;;-- Sumar posicion + orientacion
+  add b
+
+  ;;-- B = posicion de la patada
+  ld b,a
+
+  ;;-- Leer posicion del barril 2
+  ld a,(barril2_pos)
+  cp b
+  jr z, romper_barril2
+
+  jr comprobar_patada_fin
+
+  romper_barril2:
+    ld a,#90  ;-- La posicion 0x90 esta fuera de rango
+    ld (barril2_pos), a
+
+romper_barril:
+  ;;-- Meter en a la posicion del barril
+  ld a,b
+  ;;-- Calcular la direccion de video
+  call calcular_pos
+  
+  ;;-- Animacion del barril rompiendose
+  ;;-- Fotograma 1
+  call dibujar_barril_roto_1
+  
+  ld b,#20
+  call wait
+
+  call dibujar_barril_roto_2
+
+  ld b,#20
+  call wait
+
+  call dibujar_barril_roto_3
+
+  ld b,#20
+  call wait
+
+   call borrar_sprite_4x8
+
+  
+
+comprobar_patada_fin:
+  
+  ret
+
+;========================================
+;; Dibujar barril roto en la memoria de video indicada por HL
+;;
+;; ENTRADA:
+;;   HL: Posicion del barril en memoria de video
+;;
+;; MODIFICA:
+;;
+;;========================================
+dibujar_barril_roto_1:
+
+   ;;-- Fila 1
+  ld (hl), #11
+
+  ;;-- Fila 2
+  ld h,#CC
+  ld (hl),#00
+  
+  ;;-- Fila 3
+  ld h, #D4
+  ld (hl), #99 
+
+  ;;-- Fila 4
+  ld h, #DC
+  ld (hl), #BB  
+
+  ;;-- Fila 5
+  ld h, #E4
+  ld (hl), #6F
+
+  ;;-- Fila 6
+  ld h, #EC
+  ld (hl), #9F  
+
+  ;;-- Fila 7
+  ld h, #F4 
+  ld (hl), #F6
+  
+  ;;-- Fila 8
+  ld h, #FC
+  ld (hl), #60
+
+  ;;-- Establecer la posicion de partida en HL
+  ld h, #C4   
+  ret
+
+;========================================
+;; Dibujar barril roto en la memoria de video indicada por HL
+;;
+;; ENTRADA:
+;;   HL: Posicion del barril en memoria de video
+;;
+;; MODIFICA:
+;;
+;;========================================
+dibujar_barril_roto_2:
+
+   ;;-- Fila 1
+  ld (hl), #00
+
+  ;;-- Fila 2
+  ld h,#CC
+  ld (hl),#00
+  
+  ;;-- Fila 3
+  ld h, #D4
+  ld (hl), #88 
+
+  ;;-- Fila 4
+  ld h, #DC
+  ld (hl), #11  
+
+  ;;-- Fila 5
+  ld h, #E4
+  ld (hl), #6C
+
+  ;;-- Fila 6
+  ld h, #EC
+  ld (hl), #8A  
+
+  ;;-- Fila 7
+  ld h, #F4 
+  ld (hl), #F6
+  
+  ;;-- Fila 8
+  ld h, #FC
+  ld (hl), #60
+
+  ;;-- Establecer la posicion de partida en HL
+  ld h, #C4   
+  ret
+
+;========================================
+;; Dibujar barril roto en la memoria de video indicada por HL
+;;
+;; ENTRADA:
+;;   HL: Posicion del barril en memoria de video
+;;
+;; MODIFICA:
+;;
+;;========================================
+dibujar_barril_roto_3:
+
+   ;;-- Fila 1
+  ld (hl), #00
+
+  ;;-- Fila 2
+  ld h,#CC
+  ld (hl),#00
+  
+  ;;-- Fila 3
+  ld h, #D4
+  ld (hl), #00 
+
+  ;;-- Fila 4
+  ld h, #DC
+  ld (hl), #00  
+
+  ;;-- Fila 5
+  ld h, #E4
+  ld (hl), #00
+
+  ;;-- Fila 6
+  ld h, #EC
+  ld (hl), #00  
+
+  ;;-- Fila 7
+  ld h, #F4 
+  ld (hl), #54
+  
+  ;;-- Fila 8
+  ld h, #FC
+  ld (hl), #60
+
+  ;;-- Establecer la posicion de partida en HL
+  ld h, #C4   
+  ret
+
+
 
 
 ;;============================================
@@ -583,7 +789,7 @@ mover_hero:
     call dibujar_hero
 
     ;;-- Esperar
-    ld b, #8
+    ld b, #20   ;;-- Modificar esto para cambiar velocidad del personaje
     call wait
 
   ret
