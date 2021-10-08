@@ -11,6 +11,12 @@ run main
 hero_pos:
 db 0
 
+;;-- Orientacion del persona
+;;  1: Mirando a la derecha
+;; -1: Mirando a la izquierda
+hero_dir:
+db 0
+
 tecla_reset:
   db 50  ;;-- 50: Tecla R
 
@@ -20,6 +26,9 @@ tecla_derecha:
 tecla_izquierda:
   db 34  ;; Tecla O
 
+tecla_patada:
+  db 47   ;;-- 47:Spacio
+
 ;;============
 ;; MAIN
 ;;============
@@ -28,6 +37,10 @@ main:
   ld a, 20
   ld (hero_pos), a 
 
+  ;;-- Personaje mirando hacia la derecha
+  ld a, 1
+  ld (hero_dir),a
+
    ;;-- Borrar el escenario anterior
    call borrar_escenario
 
@@ -35,9 +48,7 @@ main:
    call dibujar_suelo
 
    ;; Dibujar personaje
-   ld a,(hero_pos)
-   call calcular_pos
-   call dibujar_hero_der
+   call dibujar_hero
 
     ;;-- Pausa inicial
     ld b, #80
@@ -61,11 +72,32 @@ main:
      call #BB1E
      jr nz, mover_izquierda
 
+     ;;-- Comprobar la tecla para dar una patada
+     ld a, (tecla_patada)
+     call #BB1E
+     jr nz, dar_patada
+
+     jr main_loop
+
+   ;;-- Dar patada
+   dar_patada:
+     call dibujar_hero_patada
+
+     ld b,#20  ;;-- Wait
+     call wait
+
+     ;; Dibujar personaje
+     call dibujar_hero
+     
      jr main_loop
 
     ;;-- Mover a la izquierda
     mover_izquierda:
       
+      ;;-- Establecer nueva orientacion
+      ld a,-1
+      ld (hero_dir),a
+
       ;;-- Comprobar si personaje esta en posicion inicial
       ;;-- Si es asi no se permite su movimiento
       ld a,(hero_pos)
@@ -80,6 +112,10 @@ main:
     ;;-- Tecla: Ir a la derecha
     mover_derecha:
 
+      ;;-- Establecer nueva orientacion: hacia la derecha
+      ld a,1
+      ld (hero_dir),a
+
       ;;-- Comprobar si personaje esta en posicion final
       ;;-- Si es asi, no se permite su movimiento
       ld a,(hero_pos)
@@ -93,10 +129,74 @@ main:
 
 
 ;;========================================
-;; Mover Personaje 4 pixeles a la izquierda o la derecha
+;; Dibujar el personaje segun el estado indicado por 
+;; sus variables:
+;;  * hero_pos: Indica la posicion (0-79)
+;;  * hero_dir: Indica la orientacion (-1, 1)
+;; MODIFICA:
 ;;
-;; ENTRADA:
-;;   B: Incremento a aplicar:  1 (derecha). -1 (izquierda)
+;;=========================================
+dibujar_hero:
+  ;;-- Obtener posicion del personaje y calcular su direccion
+  ;;-- de video en HL
+  ld a,(hero_pos)
+  call calcular_pos
+
+  ;;-- Leer su orientacion
+  ld a,(hero_dir)
+  
+  ;;-- Segun su orientacion se dibuja mirando hacia un lado
+  ;;-- u otro
+  dec a
+  jr z, orientacion_derecha  ;;-- Si A=1, Pintar mirando a la derecha
+
+  ;;-- Pintar mirando a la izquierda
+  call dibujar_hero_izq
+  jr fin_dibujar_hero
+
+  ;;-- Pintar mirando a la derecha
+  orientacion_derecha:
+  call dibujar_hero_der  
+
+  fin_dibujar_hero:
+  ret
+
+;;========================================
+;; Dibujar el personaje danto una patada segun el estado indicado por 
+;; sus variables:
+;;  * hero_pos: Indica la posicion (0-79)
+;;  * hero_dir: Indica la orientacion (-1, 1)
+;; MODIFICA:
+;;
+;;=========================================
+dibujar_hero_patada:
+  ;;-- Obtener posicion del personaje y calcular su direccion
+  ;;-- de video en HL
+  ld a,(hero_pos)
+  call calcular_pos
+
+  ;;-- Leer su orientacion
+  ld a,(hero_dir)
+  
+  ;;-- Segun su orientacion se dibuja mirando hacia un lado
+  ;;-- u otro
+  dec a
+  jr z, orientacion_pat_derecha  ;;-- Si A=1, Pintar mirando a la derecha
+
+  ;;-- Pintar mirando a la izquierda
+  call dibujar_hero_patada_izq
+  jr fin_dibujar_hero_pat
+
+  ;;-- Pintar mirando a la derecha
+  orientacion_pat_derecha:
+  call dibujar_hero_patada_der  
+
+  fin_dibujar_hero_pat:
+  ret
+
+;;========================================
+;; Mover Personaje 4 pixeles a la izquierda o la derecha
+;; Se actualiza su posicion y se dibuja segun su orientacion
 ;;
 ;; MODIFICA:
 ;;   HL, B, A
@@ -109,25 +209,16 @@ mover_hero:
     call borrar_sprite_8x8
 
     ;;-- Actualizar posicion personaje
-    ld a, (hero_pos)
+    ;;-- hero_pos = hero_pos + hero_dir
+    ld a,(hero_dir)
+    ld b,a
+    ld a,(hero_pos)
     add b
-    ld (hero_pos), a
+    ld (hero_pos),a
+    
+    ;;-- Dibujar personaje
+    call dibujar_hero
 
-    ;;-- Dibujar el personaje mirando en la direccion correcta
-    dec b
-    jr z, mirar_derecha
-
-    ;;-- Mirar izquierda
-    call calcular_pos
-    call dibujar_hero_izq
-    jr cont
-
-mirar_derecha:
-   ;;-- Dibujar personaje en nueva posicion
-   call calcular_pos
-   call dibujar_hero_der
-
-cont:
     ;;-- Esperar
     ld b, #8
     call wait
@@ -174,6 +265,97 @@ calcular_pos:
   ld l,a
 
   ret
+
+;-------------------------------------------------------------
+;; Dibujar personaje dando una patada hacia  
+;; la izquierda. Se coloca en la posicion indicada
+;; en el registro HL
+;;
+;; ENTRADA:
+;;    HL: Memoria de video del personaje
+;;
+;; MODIFICA: 
+;; -HL, A
+;;--------------------------------------------------------------
+dibujar_hero_patada_izq:
+
+  ;;-- Fila 1
+  ld (hl), #FF 
+
+  ;;-- Fila 2
+  ld h,#CC
+  ld (hl),#17
+  
+  ;;-- Fila 3
+  ld h, #D4
+  ld (hl), #1D
+
+  ;;-- Fila 4
+  ld h, #DC
+  ld (hl), #71
+
+  ;;-- Fila 5
+  ld h, #E4
+  ld (hl), #02
+ 
+  ;;-- Fila 6
+  ld h, #EC
+  ld (hl), #B8
+
+  ;;-- Fila 7
+  ld h, #F4  
+  ld (hl), #FE
+  
+  ;;-- Fila 8
+  ld h, #FC 
+  ld (hl), #11
+  ret
+
+;;-------------------------------------------------------------
+;; Dibujar personaje dando una patada hacia  
+;; la derecha. Se coloca en la posicion indicada
+;; en el registro HL
+;;
+;; ENTRADA:
+;;    HL: Memoria de video del personaje
+;;
+;; MODIFICA: 
+;; -HL, A
+;;--------------------------------------------------------------
+dibujar_hero_patada_der:
+
+  ;;-- Fila 1
+  ld (hl), #FF 
+
+  ;;-- Fila 2
+  ld h,#CC
+  ld (hl),#8E
+  
+  ;;-- Fila 3
+  ld h, #D4
+  ld (hl), #8B
+
+  ;;-- Fila 4
+  ld h, #DC
+  ld (hl), #E8
+
+  ;;-- Fila 5
+  ld h, #E4
+  ld (hl), #04
+ 
+  ;;-- Fila 6
+  ld h, #EC
+  ld (hl), #D1 
+
+  ;;-- Fila 7
+  ld h, #F4  
+  ld (hl), #F7
+  
+  ;;-- Fila 8
+  ld h, #FC 
+  ld (hl), #88 
+  ret
+
 
 ;;-------------------------------------------------------------
 ;; Dibujar personaje en la posicion indicada
