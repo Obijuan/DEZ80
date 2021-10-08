@@ -195,11 +195,42 @@ comprobar_patada:
   cp b
   jr z, romper_barril2
 
+  ;;-- Leer posicion del barril 1
+  ld a,(barril1_pos)
+  cp b
+  jr z, romper_barril1
+
+  ;;-- Leer posicion del barril 3
+  ld a,(barril3_pos)
+  cp b
+  jr z, romper_barril3
+
+  ;;-- Leer posicion del barril 4
+  ld a,(barril4_pos)
+  cp b
+  jr z, romper_barril4
+
   jr comprobar_patada_fin
+
+  romper_barril4:
+    ld a,#90  ;-- La posicion 0x90 esta fuera de rango
+    ld (barril4_pos), a
+    jr romper_barril
+
+  romper_barril3:
+    ld a,#90  ;-- La posicion 0x90 esta fuera de rango
+    ld (barril3_pos), a
+    jr romper_barril
 
   romper_barril2:
     ld a,#90  ;-- La posicion 0x90 esta fuera de rango
     ld (barril2_pos), a
+    jr romper_barril
+
+  romper_barril1:
+   ld a,#90
+   ld (barril1_pos), a
+   jr romper_barril
 
 romper_barril:
   ;;-- Meter en a la posicion del barril
