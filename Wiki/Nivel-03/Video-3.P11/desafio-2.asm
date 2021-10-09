@@ -25,6 +25,10 @@ db 0
 puerta_pos:
 db 0
 
+;;-- Estado de la llaveve: 0: no cogida. 1 Cogida
+llave_on:
+db 0
+
 ;;-- Contador de barriles
 contador_barriles:
 db 0
@@ -74,6 +78,10 @@ main:
   ;-- Posicion llave
   ld a,0
   ld (llave_pos), a
+
+ ;-- Estado llave
+ ld a,0
+ ld (llave_on),a
 
   ;-- Posicion puerta
   ld a,79
@@ -600,8 +608,25 @@ dibujar_barril_roto_3:
   ld h, #C4   
   ret
 
+;;=========================================
+;; Comprobar si estamos sobre la llave
+;;==========================================
+comprobar_llave:
+  ld a,(llave_pos)
+  ld b,a
+  ld a,(hero_pos)
+  cp b
+  jr nz, comprobar_llave_terminar
 
+  ;;-- Personaje sobre la llave
+  ;;-- Indicarque tenemos la llave poniendolo
+  ;;-- en la variable llave_on
+  ld a,1
+  ld (llave_on), a
 
+  comprobar_llave_terminar:
+    
+  ret
 
 ;;============================================
 ;; Comprobar si se ha chocado con algun barril. Si es asi
