@@ -17,6 +17,10 @@ db 0
 hero_dir:
 db 0
 
+;;-- Contador de barriles
+contador_barriles:
+db 0
+
 ;;-- Posiciones de los barriles
 barril1_pos:
 db 0
@@ -54,6 +58,11 @@ main:
   ld a, 1
   ld (hero_dir),a
 
+  ;;-- Contador de barriles. Cada vez que se rompe uno
+  ;;-- se decrementa el contador
+  ld a,4   ;;-- 4
+  ld (contador_barriles), a
+
   ;;-- Posiciones iniciales de los barriles
   ld a,10
   ld (barril1_pos),a
@@ -85,7 +94,7 @@ main:
 
       ;;-- Comprobar colisiones
       call comprobar_colisiones
-      jr z, muerto
+      jr z, estado_final
 
       ;;-- Comprobar tecla de RESET
       ld a, (tecla_reset)
@@ -115,6 +124,12 @@ main:
 
      ;;-- Comprobar la patada
      call comprobar_patada
+
+     ;;-- Si Z=1, VICTORIA!
+     jr z, victoria
+
+     ;;-- Todavia quedan barriles
+     ;;-- Completar la animacion y seguir
 
      ld b,#20  ;;-- Wait
      call wait
@@ -158,20 +173,31 @@ main:
       call mover_hero
       jr main_loop
 
-  ;;-- Estado de muerte: Se espera hasta que se pulse R para
-  ;;-- reiniciar el juego
-  muerto:
+;;-- Estado de victoria! Dibujar el personaje en forma de victoria
+;;-- y terminar
+victoria:
+  ld a,(hero_pos)
+  call calcular_pos
+  call dibujar_hero_victoria
+
+  ;;-- Estado final: Se espera hasta que se pulse R para
+  ;;-- reiniciar el juego. Aqui se llega bien porque nos han matado
+  ;;-- o bien porque hemos terminado con Victoria
+  estado_final:
 
     ;;-- Comprobar tecla de RESET
     ld a, (tecla_reset)
     call #BB1E
     jp nz, main
     
-    jr muerto
+    jr estado_final
 
 
 ;;=======================================
 ;; Comprobar si la patada ha dado a un barril o no
+;; SALIDA:
+;;    z: 1=> Ya no quedan barriles!
+;;    z=0: Quedan barriles
 ;;=======================================
 comprobar_patada:
 
@@ -210,6 +236,9 @@ comprobar_patada:
   cp b
   jr z, romper_barril4
 
+  ;;-- Poner flag z a 0: quedan barriles todavia
+  ld a,1
+  or a
   jr comprobar_patada_fin
 
   romper_barril4:
@@ -257,11 +286,68 @@ romper_barril:
 
    call borrar_sprite_4x8
 
-  
+  ;;-- Decrementar el contador de barriles
+  ld a,(contador_barriles)
+  dec a
+  ld (contador_barriles),a
+
+  ;;-- Si todavia quedan barriles, terminar...
+  jr nz, comprobar_patada_fin
+
+  ;--- YA NO HAY BARRILES!
+  ;-- Poner flag Z a 1
+  xor a
 
 comprobar_patada_fin:
   
   ret
+
+;;========================================
+;; Dibujar heroe en posicion de victoria
+;;
+;; ENTRADA:
+;;   HL: Posicion del personaje en memoria de video
+;;
+;; MODIFICA:
+;;
+;;========================================
+dibujar_hero_victoria:
+
+   ;;-- Fila 1
+  ld (hl), #66
+
+  ;;-- Fila 2
+  ld h,#CC
+  ld (hl),#9F
+  
+  ;;-- Fila 3
+  ld h, #D4
+  ld (hl), #98 
+
+  ;;-- Fila 4
+  ld h, #DC
+  ld (hl), #9E  
+
+  ;;-- Fila 5
+  ld h, #E4
+  ld (hl), #F0
+
+  ;;-- Fila 6
+  ld h, #EC
+  ld (hl), #42  
+
+  ;;-- Fila 7
+  ld h, #F4 
+  ld (hl), #24
+  
+  ;;-- Fila 8
+  ld h, #FC
+  ld (hl), #99
+
+  ;;-- Establecer la posicion de partida en HL
+  ld h, #C4   
+  ret
+
 
 ;========================================
 ;; Dibujar barril roto en la memoria de video indicada por HL
