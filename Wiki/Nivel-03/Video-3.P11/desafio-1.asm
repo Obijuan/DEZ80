@@ -906,7 +906,7 @@ mover_hero:
     call dibujar_hero
 
     ;;-- Esperar
-    ld b, #20   ;;-- Modificar esto para cambiar velocidad del personaje
+    ld b, #8   ;;-- Modificar esto para cambiar velocidad del personaje
     call wait
 
   ret
