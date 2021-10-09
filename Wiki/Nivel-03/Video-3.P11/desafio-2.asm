@@ -88,23 +88,13 @@ main:
   ld (puerta_pos), a
 
   ;;-- Posiciones iniciales de los barriles
-  ;;ld a,10
-  ;;ld (barril1_pos),a
-  ;;ld a,17
-  ;;ld (barril2_pos),a
-  ;;ld a,50
-  ;;ld (barril3_pos),a
-  ;;ld a,60
-  ;;ld (barril4_pos),a
-
-  ;;-- Posiciones iniciales de los barriles
-  ld a,90
+  ld a,10
   ld (barril1_pos),a
-  ld a,90
+  ld a,17
   ld (barril2_pos),a
-  ld a,90
+  ld a,50
   ld (barril3_pos),a
-  ld a,90
+  ld a,60
   ld (barril4_pos),a
 
    ;;-- Borrar el escenario anterior
@@ -136,6 +126,12 @@ main:
       call comprobar_colisiones
       jr z, estado_final
 
+      ;;---Comprobar la llave
+      call comprobar_llave
+
+      ;;-- Comprobar la puerta
+      ;;call comprobar_puerta
+
       ;;-- Comprobar tecla de RESET
       ld a, (tecla_reset)
       call #BB1E
@@ -164,12 +160,6 @@ main:
 
      ;;-- Comprobar la patada
      call comprobar_patada
-
-     ;;-- Si Z=1, VICTORIA!
-     jr z, victoria
-
-     ;;-- Todavia quedan barriles
-     ;;-- Completar la animacion y seguir
 
      ld b,#20  ;;-- Wait
      call wait
@@ -203,12 +193,20 @@ main:
       ld a,1
       ld (hero_dir),a
 
-      ;;-- Comprobar si personaje esta en posicion final
-      ;;-- Si es asi, no se permite su movimiento
-      ld a,(hero_pos)
-      cp 79
-      jr z, main_loop
+      ;;--Comprobar si la siguiente posicion es la puerta
+      call comprobar_puerta
+      jr nz, no_puerta_delante
 
+     ;;-- Puerta delante!!
+     ;;-- Si el hero tiene la llave, VICTORIA
+     ld a,(llave_on)
+     dec a
+     jr z, victoria
+
+
+     jr main_loop
+
+no_puerta_delante:
       ;;-- Mover a la derecha
       call mover_hero
       jr main_loop
@@ -216,6 +214,8 @@ main:
 ;;-- Estado de victoria! Dibujar el personaje en forma de victoria
 ;;-- y terminar
 victoria:
+  call mover_hero
+
   ld a,(hero_pos)
   call calcular_pos
   call dibujar_hero_victoria
@@ -606,6 +606,43 @@ dibujar_barril_roto_3:
 
   ;;-- Establecer la posicion de partida en HL
   ld h, #C4   
+  ret
+
+;;=================================
+;;  Comprobar si estamos sobre la puerta
+;; SALIDA:
+;;  z=0: La puerta no esta delante
+;;  z=1: La puerta esta delante
+;;=================================
+comprobar_puerta:
+
+  ;;-- Leer orientacion  
+  ld a,(hero_dir)
+  ld b,a
+  ;;-- Leer posicion actual
+  ld a,(hero_pos)
+  ;;-- Sumar posicion + orientacion
+  add b
+
+  ;;-- B = posicion delante del personaje
+  ld b,a
+
+  ld a,(puerta_pos)
+  cp b
+  jr nz, puerta_no_delante
+
+  ;;-- La puerta esta justo delante!!
+  ;;-- Poner flag z a uno
+  xor a
+  jr comprobar_puerta_fin
+
+puerta_no_delante:
+  ;;-- Poner flag z a cero
+   ld a,1
+  or a
+
+comprobar_puerta_fin:
+
   ret
 
 ;;=========================================
