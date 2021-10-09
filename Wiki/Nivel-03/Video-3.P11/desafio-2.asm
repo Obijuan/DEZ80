@@ -80,13 +80,23 @@ main:
   ld (puerta_pos), a
 
   ;;-- Posiciones iniciales de los barriles
-  ld a,10
+  ;;ld a,10
+  ;;ld (barril1_pos),a
+  ;;ld a,17
+  ;;ld (barril2_pos),a
+  ;;ld a,50
+  ;;ld (barril3_pos),a
+  ;;ld a,60
+  ;;ld (barril4_pos),a
+
+  ;;-- Posiciones iniciales de los barriles
+  ld a,90
   ld (barril1_pos),a
-  ld a,17
+  ld a,90
   ld (barril2_pos),a
-  ld a,50
+  ld a,90
   ld (barril3_pos),a
-  ld a,60
+  ld a,90
   ld (barril4_pos),a
 
    ;;-- Borrar el escenario anterior
