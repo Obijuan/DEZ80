@@ -3,8 +3,8 @@
 ;;===================================
 ;; VARIABLES
 ;;===================================
-hero_x: .db #78  ;;-- x position (in bytes [0-79])
-hero_y: .db #190 ;;-- y posicion (in pixels [0-199])
+hero_x: .db #39  ;;-- x position (in bytes [0-79])
+hero_y: .db #80  ;;-- y posicion (in pixels [0-199])
 
 ;;-- CPCtelera symbols
 .globl cpct_drawSolidBox_asm
@@ -15,7 +15,7 @@ hero_y: .db #190 ;;-- y posicion (in pixels [0-199])
 ;;===============================
 ;; drawHero
 ;;
-;; DESTROYs: AF, BC, DE, 
+;; DESTROYs: AF, BC, DE, HL
 ;;===============================
 drawHero:
 
