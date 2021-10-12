@@ -142,7 +142,8 @@ drawGround:
 ;;===============================
 _main::
 
-  ld a, #0xFF
+  ;;-- Draw the Ground in red color
+  ld a, #0xFF     ;;-- Red pattern
   call drawGround
 
   main_loop:
