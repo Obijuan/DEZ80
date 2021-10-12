@@ -11,12 +11,15 @@ hero_y: .db #80  ;;-- y posicion (in pixels [0-199])
 .globl cpct_getScreenPtr_asm
 .globl cpct_scanKeyboard_asm
 .globl cpct_isKeyPressed_asm
+.globl cpct_waitVSYNC_asm
+
 .include "keyboard/keyboard.s"
 
 .area _CODE
 
 ;;===============================
-;; drawHero
+;; checkUserInput: Read the keyboard and update the position
+;; of our hero
 ;;
 ;; DESTROYs: 
 ;;===============================
@@ -37,46 +40,21 @@ checkUserInput:
     inc a           ;;-- A = A + 1
     ld (hero_x),a   ;;-- hero_x = A
 
-    ld a,#0xFF
-    ld (0xC000), a
-    ret
-
   d_not_pressed:
-    ld a,#0
-    ld (0xC000), a
   ret
 
 ;;===============================
 ;; drawHero
 ;;
+;; INPUT:
+;;   A => Color Pattern
+;;
 ;; DESTROYs: AF, BC, DE, HL
 ;;===============================
 drawHero:
 
-  ;;-- Convert the hero_x, hero_y variables into
-  ;;-- the corresponding address in the Video memory
-  ld   de, #0xC000  ;;-- Video initial address
-  ld    a,(hero_x)
-  ld    c,a         ;;-- Hero x position
-  ld    a,(hero_y)
-  ld    b,a         ;;-- Hero y position
-  call cpct_getScreenPtr_asm
-
-  ;; HL contains the video address
-  ;; move it to the DE register
-  ex de, hl
-
-  ;; Draw a Box (our hero!)
-  ld     a, #0x0F      ;; Cyan
-  ld    bc, #0x0802    ;; Height, Width: 8x8 pixels
-  call  cpct_drawSolidBox_asm
-  ret
-
-;;====================================
-;; deleteHero
-;;
-;;====================================
-deleteHero:
+  ;;-- Store the color patter
+  push af
 
   ;;-- Convert the hero_x, hero_y variables into
   ;;-- the corresponding address in the Video memory
@@ -92,7 +70,7 @@ deleteHero:
   ex de, hl
 
   ;; Draw a Box (our hero!)
-  ld     a, #0x00      ;; Backgrond...
+  pop af               ;; Read the color pattern
   ld    bc, #0x0802    ;; Height, Width: 8x8 pixels
   call  cpct_drawSolidBox_asm
   ret
@@ -102,16 +80,18 @@ deleteHero:
 ;;===============================
 _main::
 
-  call deleteHero       ;; Erase previous hero
+  ;; Erase previous hero
+  ld a,#0x00            ;; Color pattern: 0 (Background)
+  call drawHero
+
   call checkUserInput   ;; Check if user pressed keys
   
-  call drawHero         ;; Draw our Hero :)
+  ;;-- Draw the hero
+  ld a,#0x0F            ;; Color pattern: Cyan
+  call drawHero         
 
-;;  ld a, #20
-;;wait:
-;;  halt
-;;  dec a
-;;  jr nz, wait
-;;
+  ;;-- Wait for the raster to finish
+  call cpct_waitVSYNC_asm
+  
   jr _main
-
+  
