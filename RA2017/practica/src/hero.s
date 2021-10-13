@@ -7,8 +7,8 @@
 ;;==============================================
 
 ;;-- HERO DATA
-hero_x:    .db #39  ;;-- x position (in bytes [0-79])
-hero_y:    .db #80  ;;-- y posicion (in pixels [0-199])
+hero_x::   .db #39  ;;-- x position (in bytes [0-79])
+hero_y::    .db #80  ;;-- y posicion (in pixels [0-199])
 hero_jump: .db #-1  ;;-- Are we jumping? 
 
 ;;-- Jump table

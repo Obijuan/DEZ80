@@ -39,6 +39,55 @@ drawGround:
   call cpct_drawSolidBox_asm
 
   ret
+ 
+checkCollision_x:
+  ld a,(obs_x)
+  ld b,a        ;;-- B = obs_x
+  ld a,(hero_x) ;;-- A = hero_x
+  cp b          ;; obs_x == hero_x?
+  ret z
+
+  ;;-- No colision
+  inc a  ;; A = hexo_x + 1
+  cp b   ;; obs_x == hero_x + 1?
+  ret
+
+checkCollision_y:
+  ld a,(obs_y)
+  ld b,a         ;;-- B = obs_y
+  ld a,(hero_y)  ;;-- A = hero_y
+  add #4         ;;-- A = hero_y + 4
+  cp b           ;;-- obs_y < hero_y+4?
+  jr nc, collision1
+
+  ;;-- No collision
+  ret 
+
+collision1:
+  ;;-- There is collision. Check the other condition
+  add #-12         ;;-- obs_y > hero_y-8?
+  cp b
+  jr c, collision2
+ 
+  ;;-- No collision
+  ret
+   
+collision2:
+  ;;--  hero_y-8 < obs_y < hero_y + 4. Both conditions met
+  xor a  ;;-- set z=1. There is collision!
+  ret
+
+;;========================================================
+;; Check the colision between the hero and the obstacle 
+;;========================================================
+checkCollision:
+  ;; There is colision when the collision on x is true and the colision on y is also true
+  call checkCollision_x
+  ret nz  ; No colision in x (no need for checking on y)
+
+  ;;-- Collision in x. Check the y variable
+  call checkCollision_y
+  ret
 
 ;;===============================
 ;;  Main program entry
@@ -56,6 +105,21 @@ _main::
 
     call hero_update     ;; Update the Hero
     call obstacle_update ;; Update the bullet
+
+    ;;-- Check colision
+    call checkCollision
+
+    jr z,colission
+
+      ;;-- No colission
+      ld a,#0x00
+      jr continue
+
+    colission:
+      ld a,#0xFF
+
+    continue:
+      ld (0xC000),a
 
     call hero_draw      ;;-- Draw the hero
     call obstacle_draw  ;;-- Draw the bullet
