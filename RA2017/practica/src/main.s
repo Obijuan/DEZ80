@@ -99,8 +99,8 @@ jumpControl:
   ;;-- Calculate the new hero_y pos
   ld b, (hl)      ;;-- Get the current jump increment
   ld a,b
-  cp #0x80        ;;-- Check if it is the last position
-  jr z,update_jump_index
+  cp #0x80         ;;-- Check if it is the last position
+  jr z,end_of_jump ;;-- If so, end the current jump
 
     ;;-- NOT the last position
     ;;-- update the hero_y 
@@ -112,14 +112,15 @@ jumpControl:
     ld a, (hero_jump)
     inc a
     ld (hero_jump),a
-    jr continue_jump
 
-  update_jump_index:
+    ;;-- We are done
+    ret
+
+  ;;-- Finish the jup: write -1 in the hero_jump variable
+  end_of_jump:
     ld a,#-1
     ld (hero_jump),a
-
-  continue_jump:
-  ret
+    ret
 
 ;;===============================
 ;; checkUserInput: Read the keyboard and update the position
