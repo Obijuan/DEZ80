@@ -45,6 +45,11 @@ drawGround:
 ;;===============================
 _main::
 
+  call cpct_disableFirmware_asm
+
+  ld c,#0
+  call cpct_setVideoMode_asm
+
   ;;-- Draw the Ground
   ld a, #0xA0     ;;-- yellow pattern
   call drawGround
