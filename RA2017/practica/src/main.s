@@ -63,19 +63,19 @@ checkCollision_y:
   ;;-- No collision
   ret 
 
-collision1:
-  ;;-- There is collision. Check the other condition
-  add #-12         ;;-- obs_y > hero_y-8?
-  cp b
-  jr c, collision2
+  collision1:
+    ;;-- There is collision. Check the other condition
+    add #-12         ;;-- obs_y > hero_y-8?
+    cp b
+    jr c, collision2
  
   ;;-- No collision
   ret
    
-collision2:
-  ;;--  hero_y-8 < obs_y < hero_y + 4. Both conditions met
-  xor a  ;;-- set z=1. There is collision!
-  ret
+  collision2:
+    ;;--  hero_y-8 < obs_y < hero_y + 4. Both conditions met
+    xor a  ;;-- set z=1. There is collision!
+    ret
 
 ;;========================================================
 ;; Check the colision between the hero and the obstacle 
