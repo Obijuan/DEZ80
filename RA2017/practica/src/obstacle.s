@@ -50,6 +50,7 @@ obstacle_checkCollision::
   ;;
   ;;  obs_x + obs_w - hero_x <= 0
   ;;
+
   ld a,(obs_x)
   ld c,a
   ld a,(obs_w)
@@ -72,6 +73,27 @@ obstacle_checkCollision::
   jr z, no_collision
   jp m, no_collision  
 
+  ;;-- Check collision for y-axis
+  ;;-- if (hero_y + hero_h <= obs_y) no Collision
+  ;;---   (hero_y + hero_h - obs_y <= 0)
+  dec hl       ;-- HL points to hero_y
+  ld a,(hl)    ;-- A = hero_y
+  ld c,a       ;-- C = hero_y
+  inc hl
+  inc hl       ;-- HL points to hero_h
+  ld a,(hl)    ;-- A = hero_h
+  add c        ;-- A = hero_y + hero_h
+  ld c,a       ;-- C = hero_y + hero_h
+  ld a,(obs_y) ;-- A = obs_y
+  ld b,a       ;-- B = obs_y
+  ld a,c       ;-- A = hero_y + hero_h
+  sub b        ;-- A = hero_y + hero_h - obs_y
+  jr z, no_collision
+  jp m, no_collision
+
+
+  ;;-- if (obs_y + obs_h <= hero_x) no Collision 
+  ;;-- This case cannot happend... no need to implement it
 
   ;;-- Collision
   ld a, #0xFF
