@@ -6,5 +6,4 @@
 .globl   hero_erase
 .globl   hero_draw
 .globl   hero_update
-.globl   hero_x
-.globl   hero_y
+.globl   hero_getPtrHL

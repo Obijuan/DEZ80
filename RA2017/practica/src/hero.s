@@ -7,8 +7,10 @@
 ;;==============================================
 
 ;;-- HERO DATA
-hero_x::   .db #39  ;;-- x position (in bytes [0-79])
-hero_y::    .db #80  ;;-- y posicion (in pixels [0-199])
+hero_x:   .db #39  ;;-- x position (in bytes [0-79])
+hero_y:   .db #80  ;;-- y posicion (in pixels [0-199])
+hero_w:   .db #2   ;;-- Width in bytes
+hero_h:   .db #8   ;;-- Height in bytes
 hero_jump: .db #-1  ;;-- Are we jumping? 
 
 ;;-- Jump table
@@ -27,6 +29,16 @@ jumptable:
 ;; PUBLIC FUNCTIONS
 ;;=============================================
 ;;=============================================
+
+;;======================
+;; Get a pointer to hero data in HL
+;; DESTROYS: HL
+;; RETURN:
+;;   HL: Pointer to hero Data
+;;=======================
+hero_getPtrHL::
+  ld hl,#hero_x
+  ret
 
 ;;======================
 ;; Updates the Hero

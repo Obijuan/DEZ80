@@ -41,9 +41,9 @@ drawGround:
   ret
  
 checkCollision_x:
-  ld a,(obs_x)
+  ;ld a,(obs_x)
   ld b,a        ;;-- B = obs_x
-  ld a,(hero_x) ;;-- A = hero_x
+  ;ld a,(hero_x) ;;-- A = hero_x
   cp b          ;; obs_x == hero_x?
   ret z
 
@@ -53,9 +53,9 @@ checkCollision_x:
   ret
 
 checkCollision_y:
-  ld a,(obs_y)
+  ;ld a,(obs_y)
   ld b,a         ;;-- B = obs_y
-  ld a,(hero_y)  ;;-- A = hero_y
+  ;ld a,(hero_y)  ;;-- A = hero_y
   add #4         ;;-- A = hero_y + 4
   cp b           ;;-- obs_y < hero_y+4?
   jr nc, collision1
@@ -107,19 +107,12 @@ _main::
     call obstacle_update ;; Update the bullet
 
     ;;-- Check colision
-    call checkCollision
-
-    jr z,colission
-
-      ;;-- No colission
-      ld a,#0x00
-      jr continue
-
-    colission:
-      ld a,#0xFF
-
-    continue:
-      ld (0xC000),a
+    call hero_getPtrHL
+    call obstacle_checkCollision
+    ld (0xC000),a        ;;-- Draw collision
+    ld (0xC001),a 
+    ld (0xC002),a
+    ld (0xC003),a
 
     call hero_draw      ;;-- Draw the hero
     call obstacle_draw  ;;-- Draw the bullet

@@ -7,8 +7,10 @@
 ;;==============================================
 
 ;;-- OBSTACLE DATA
-obs_x::   .db #80-1  ;;-- x position (in bytes [0-79])
-obs_y::    .db #82    ;;-- y posicion (in pixels [0-199])
+obs_x:   .db #80-1  ;;-- x position (in bytes [0-79])
+obs_y:   .db #82    ;;-- y posicion (in pixels [0-199])
+obs_w:   .db #1     ;;-- bytes
+obs_h:   .db #4     ;;-- pixels
 
 ;;=============================================
 ;;=============================================
@@ -32,8 +34,53 @@ obstacle_update::
     ld a, #80-1  ;;-- A = Obs_x = 80-1
 
   not_restart_x:
-    ld  (obs_x), a 
+    ld  (obs_x), a  ;;-- Update obs_x
     ret
+
+;;================================================================
+;;  Checks Collision between obstacle and another entity
+;;  Input:
+;;   HL: Points to the other entity with which to check collision
+;;  Return:
+;;   xxxxxxx
+;;================================================================
+obstacle_checkCollision::
+  ;;
+  ;; if (obs_x + obs_w <= hero_x) no collision
+  ;;
+  ;;  obs_x + obs_w - hero_x <= 0
+  ;;
+  ld a,(obs_x)
+  ld c,a
+  ld a,(obs_w)
+  add c         ;;-- A = obs_x + obs_w
+  sub (hl)      ;;-- A = obs_x + obs_w - hero_x
+  jr z, no_collision
+  jp m, no_collision
+
+  ;; if (hero_x + hero_w <= obs_x)
+  ;;  hero_x + hero_w - obs_x <= 0
+  ld a,(hl)    ; A = hero_x
+  inc hl
+  inc hl       ; HL points to hero_w
+  add (hl)     ; A = hero_x + hero_w
+  ld c,a       ; C = hero_x + hero_w
+  ld a,(obs_x) ; A = obs_x
+  ld b,a       ; B = obs_x
+  ld a,c       ; A = hero_x + hero_w
+  sub b        ; A = hero_x + hero_w - obs_x
+  jr z, no_collision
+  jp m, no_collision  
+
+
+  ;;-- Collision
+  ld a, #0xFF
+  ret 
+
+  no_collision:
+    ld a, #0x00
+
+  ret
 
 ;;======================
 ;; Draw the obstacle
