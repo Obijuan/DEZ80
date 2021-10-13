@@ -1,13 +1,9 @@
 .area _DATA
 .area _CODE
 
-;;-- CPCtelera symbols
-.globl cpct_waitVSYNC_asm
-.globl cpct_drawSolidBox_asm
-.globl cpct_getScreenPtr_asm
-
 .include "hero.h.s"
-.include "bullet.h.s"
+.include "obstacle.h.s"
+.include "cpctelera.h.s"
 
 ;;===============================
 ;; drawGround
@@ -55,14 +51,14 @@ _main::
 
   main_loop:
 
-    call hero_erase   ;; Erase the hero
-    call bullet_erase ;; Erase the bullet
+    call hero_erase     ;; Erase the hero
+    call obstacle_erase ;; Erase the bullet
 
-    call hero_update   ;; Update the Hero
-    call bullet_update ;; Update the bullet
+    call hero_update     ;; Update the Hero
+    call obstacle_update ;; Update the bullet
 
-    call hero_draw    ;;-- Draw the hero
-    call bullet_draw  ;;-- Draw the bullet
+    call hero_draw      ;;-- Draw the hero
+    call obstacle_draw  ;;-- Draw the bullet
   
     ;;-- Wait for the raster to finish
     call cpct_waitVSYNC_asm

@@ -19,11 +19,7 @@ jumptable:
   .db #0x80
 
 ;;-- CPCtelera symbols
-.globl cpct_drawSolidBox_asm
-.globl cpct_getScreenPtr_asm
-.globl cpct_scanKeyboard_asm
-.globl cpct_isKeyPressed_asm
-
+.include "cpctelera.h.s"
 .include "keyboard/keyboard.s"
 
 ;;=============================================
