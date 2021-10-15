@@ -4,6 +4,7 @@
 .include "hero.h.s"
 .include "obstacle.h.s"
 .include "cpctelera.h.s"
+.globl _sprite_palette
 
 ;;===============================
 ;; drawGround
@@ -19,7 +20,7 @@ drawGround:
 
   ;;-- Draw the half-left side of the ground
   ld   de, #0xC000  ;;-- Video initial address
-  ld   bc, #0x5800  ;;-- Position: 0,0x50
+  ld   bc, #0x5C00  ;;-- Position: 0,0x5C
   call cpct_getScreenPtr_asm
 
   ex de, hl      ;;-- DE=video address for the ground
@@ -30,7 +31,7 @@ drawGround:
 
   ;;-- Draw the half-right side of the ground
   ld   de, #0xC000  ;;-- Video initial address
-  ld   bc, #0x5840  ;;-- Position: 0x50,0x58
+  ld   bc, #0x5C40  ;;-- Position: 0x40,0x5C
   call cpct_getScreenPtr_asm
 
   ex de, hl      ;;-- DE=video address for the ground
@@ -45,13 +46,21 @@ drawGround:
 ;;===============================
 _main::
 
+  ;;-- Disable Amstrad firmware. Needed for changing
+  ;;-- the video mode
   call cpct_disableFirmware_asm
 
+  ;;-- Change the video modeo to 0 (160x200 16 colors)
   ld c,#0
   call cpct_setVideoMode_asm
 
+  ;;-- Change the color palette
+  ld hl, #_sprite_palette
+  ld de, #16
+  call cpct_setPalette_asm
+
   ;;-- Draw the Ground
-  ld a, #0xA0     ;;-- yellow pattern
+  ld a, #0xC3 ;;-- Pink (mode 0)
   call drawGround
 
   main_loop:

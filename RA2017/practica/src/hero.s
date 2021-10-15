@@ -6,6 +6,8 @@
 ;;==============================================
 ;;==============================================
 
+.globl _sprite_smily
+
 ;;-- HERO DATA
 hero_x:   .db #39  ;;-- x position (in bytes [0-79])
 hero_y:   .db #80  ;;-- y posicion (in pixels [0-199])
@@ -64,11 +66,25 @@ hero_draw::
 ;; DESTROYS: AF, BC, HL
 ;;=======================
 hero_erase::
-  ;; Erase previous hero
-  ld a,#0x00            ;; Color pattern: 0 (Background)
-  call drawHero
-  ret
 
+  ;;-- Convert the hero_x, hero_y variables into
+  ;;-- the corresponding address in the Video memory
+  ld   de, #0xC000  ;;-- Video initial address
+  ld    a,(hero_x)
+  ld    c,a         ;;-- Hero x position
+  ld    a,(hero_y)
+  ld    b,a         ;;-- Hero y position
+  call cpct_getScreenPtr_asm
+
+  ;; HL contains the video address
+  ;; move it to the DE register
+  ex de, hl
+
+  ;; Draw a Box (our hero!)
+  ld     a, #0x00      ;; Color pattern: 0 (Black!)
+  ld    bc, #0x0C04    ;; Height, Width: 12x8 pixels
+  call  cpct_drawSolidBox_asm
+  ret
 
 
 ;;=============================================
@@ -227,9 +243,6 @@ checkUserInput:
 ;;===============================
 drawHero:
 
-  ;;-- Store the color patter
-  push af
-
   ;;-- Convert the hero_x, hero_y variables into
   ;;-- the corresponding address in the Video memory
   ld   de, #0xC000  ;;-- Video initial address
@@ -244,8 +257,8 @@ drawHero:
   ex de, hl
 
   ;; Draw a Box (our hero!)
-  pop af               ;; Read the color pattern
-  ld    bc, #0x0802    ;; Height, Width: 8x8 pixels
-  call  cpct_drawSolidBox_asm
+  ld    hl, #_sprite_smily
+  ld    bc, #0x0C04    ;; Height, Width: 8x12 pixels
+  call  cpct_drawSprite_asm
   ret
 
