@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="42.333336mm"
+   height="42.333347mm"
+   viewBox="0 0 42.333336 42.333347"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.1 (3bf5ae0, 2021-09-20)"
+   sodipodi:docname="chess.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="true"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="2.7260101"
+     inkscape:cx="28.796665"
+     inkscape:cy="84.555813"
+     inkscape:window-width="1858"
+     inkscape:window-height="1016"
+     inkscape:window-x="62"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer2">
+    <inkscape:grid
+       type="xygrid"
+       id="grid824"
+       originx="-21.166663"
+       originy="-84.666667" />
+  </sodipodi:namedview>
+  <defs
+     id="defs2" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="back">
+    <rect
+       style="fill:#ffffff;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect1084"
+       width="42.333332"
+       height="42.333332"
+       x="3.6666665e-06"
+       y="-3.3333333e-07"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+  </g>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-21.166664,-84.666664)">
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect848"
+       width="5.2916665"
+       height="5.2916665"
+       x="21.166666"
+       y="84.666664"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect930"
+       width="5.2916665"
+       height="5.2916665"
+       x="26.458334"
+       y="89.958336"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect932"
+       width="5.2916665"
+       height="5.2916665"
+       x="31.75"
+       y="84.666672"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect934"
+       width="5.2916665"
+       height="5.2916665"
+       x="37.041668"
+       y="89.958336"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect936"
+       width="5.2916665"
+       height="5.2916665"
+       x="42.333332"
+       y="84.666672"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect938"
+       width="5.2916665"
+       height="5.2916665"
+       x="47.625"
+       y="89.958336"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect940"
+       width="5.2916665"
+       height="5.2916665"
+       x="52.916664"
+       y="84.666672"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect942"
+       width="5.2916665"
+       height="5.2916665"
+       x="58.208332"
+       y="89.958336"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect944"
+       width="5.2916665"
+       height="5.2916665"
+       x="21.166666"
+       y="95.25"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect946"
+       width="5.2916665"
+       height="5.2916665"
+       x="31.75"
+       y="95.25"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect948"
+       width="5.2916665"
+       height="5.2916665"
+       x="42.333332"
+       y="95.25"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect950"
+       width="5.2916665"
+       height="5.2916665"
+       x="52.916664"
+       y="95.25"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect952"
+       width="5.2916665"
+       height="5.2916665"
+       x="26.458332"
+       y="100.54167"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect954"
+       width="5.2916665"
+       height="5.2916665"
+       x="37.041668"
+       y="100.54167"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect956"
+       width="5.2916665"
+       height="5.2916665"
+       x="47.625"
+       y="100.54167"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect958"
+       width="5.2916665"
+       height="5.2916665"
+       x="58.208332"
+       y="100.54167"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect960"
+       width="5.2916665"
+       height="5.2916665"
+       x="21.166664"
+       y="105.83333"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect962"
+       width="5.2916665"
+       height="5.2916665"
+       x="26.458332"
+       y="111.125"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect964"
+       width="5.2916665"
+       height="5.2916665"
+       x="31.749998"
+       y="105.83334"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect966"
+       width="5.2916665"
+       height="5.2916665"
+       x="37.041668"
+       y="111.125"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect968"
+       width="5.2916665"
+       height="5.2916665"
+       x="42.333332"
+       y="105.83334"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect970"
+       width="5.2916665"
+       height="5.2916665"
+       x="47.625"
+       y="111.125"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect972"
+       width="5.2916665"
+       height="5.2916665"
+       x="52.916664"
+       y="105.83334"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect974"
+       width="5.2916665"
+       height="5.2916665"
+       x="58.208332"
+       y="111.125"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect976"
+       width="5.2916665"
+       height="5.2916665"
+       x="21.166664"
+       y="116.41666"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect978"
+       width="5.2916665"
+       height="5.2916665"
+       x="31.749998"
+       y="116.41666"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect980"
+       width="5.2916665"
+       height="5.2916665"
+       x="42.333332"
+       y="116.41666"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect982"
+       width="5.2916665"
+       height="5.2916665"
+       x="52.916664"
+       y="116.41666"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect984"
+       width="5.2916665"
+       height="5.2916665"
+       x="26.45833"
+       y="121.70834"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect986"
+       width="5.2916665"
+       height="5.2916665"
+       x="37.041668"
+       y="121.70834"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect988"
+       width="5.2916665"
+       height="5.2916665"
+       x="47.625"
+       y="121.70834"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+    <rect
+       style="fill:#000000;stroke-width:0.79375;stroke-linecap:round;stroke-linejoin:round"
+       id="rect990"
+       width="5.2916665"
+       height="5.2916665"
+       x="58.208332"
+       y="121.70834"
+       inkscape:export-filename="/home/obijuan/Develop/DEZ80/RA2017/practica/assets/chess.png"
+       inkscape:export-xdpi="4.7999988"
+       inkscape:export-ydpi="4.7999988" />
+  </g>
+</svg>
