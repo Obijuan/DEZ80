@@ -14,5 +14,7 @@
 .globl cpct_setVideoMode_asm
 .globl cpct_drawSprite_asm
 .globl cpct_setPalette_asm
+.globl cpct_etm_setTileset2x4_asm
+.globl cpct_etm_drawTileBox2x4_asm
 
 

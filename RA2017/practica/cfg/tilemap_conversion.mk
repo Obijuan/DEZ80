@@ -53,7 +53,7 @@
 ## at each given location of the C-array. 
 ##
 
-#$(eval $(call TMX2C,img/tilemap.tmx,g_tilemap,src/,4))
+$(eval $(call TMX2C,assets/level1.tmx,level0,src/niveles/,))
 
 ## Convert img/level0b.tmx to src/levels/level0b.c and src/levels/level0b.h
 ##		This file contains another tilemap created with Tiled. This macro 

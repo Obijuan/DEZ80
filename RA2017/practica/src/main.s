@@ -5,6 +5,8 @@
 .include "obstacle.h.s"
 .include "cpctelera.h.s"
 .globl _sprite_palette
+.globl _g_tileset
+.globl _level0
 
 ;;===============================
 ;; drawGround
@@ -59,28 +61,42 @@ _main::
   ld de, #16
   call cpct_setPalette_asm
 
+  ;;-- Configure the tileset
+  ld hl,#_g_tileset
+  call cpct_etm_setTileset2x4_asm
+
+  ;;-- Draw the level0
+  ld hl, #_level0
+  push hl
+  ld hl,#0xC000
+  push hl
+  ld bc,#0x0000
+  ld de,#0x2028  
+  ld a,#0x28
+  call cpct_etm_drawTileBox2x4_asm
+  
   ;;-- Draw the Ground
-  ld a, #0xC3 ;;-- Pink (mode 0)
-  call drawGround
+  ;;ld a, #0xC3 ;;-- Pink (mode 0)
+  ;call drawGround
 
   main_loop:
 
     call hero_erase     ;; Erase the hero
-    call obstacle_erase ;; Erase the bullet
+    ;;call obstacle_erase ;; Erase the bullet
 
     call hero_update     ;; Update the Hero
-    call obstacle_update ;; Update the bullet
+    ;;call obstacle_update ;; Update the bullet
 
     ;;-- Check colision
     call hero_getPtrHL
-    call obstacle_checkCollision
-    ld (0xC000),a        ;;-- Draw collision
-    ld (0xC001),a 
-    ld (0xC002),a
-    ld (0xC003),a
+    ;;call obstacle_checkCollision
+    ;;ld (0xC000),a        ;;-- Draw collision
+    ;;ld (0xC001),a 
+    ;;ld (0xC002),a
+    ;;ld (0xC003),a
 
     call hero_draw      ;;-- Draw the hero
-    call obstacle_draw  ;;-- Draw the bullet
+    ;;call obstacle_draw  ;;-- Draw the bullet
   
     ;;-- Wait for the raster to finish
     call cpct_waitVSYNC_asm
