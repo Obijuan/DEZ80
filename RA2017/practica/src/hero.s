@@ -9,22 +9,27 @@
 ;;-- Data for drawing the sprite
 .globl _sprite_smily
 
+.macro defineEntity name, x, y, w, h, spr
+  name'_data:
+  name'_x:      .db x    ;;-- position (in bytes [0-79])
+  name'_y:      .db y    ;;-- y posicion (in pixels [0-199])
+  name'_w:      .db w    ;;-- Width in bytes
+  name'_h:      .db h    ;;-- Height in bytes
+  name'_sprite: .dw spr  ;;-- (+4) Pointer to the sprite
+  name'_jump:   .db #-1  ;;-- Are we jumping? 
+.endm
+
+.equ Ent_x, 0
+.equ Ent_y, 1
+.equ Ent_w, 2
+.equ Ent_h, 3
+.equ Ent_spr_l, 4
+.equ Ent_spr_h, 5
+.equ Ent_jmp, 6
+
 ;;-- HERO DATA
-hero_data:
-  hero_x:   .db #39  ;;-- (+0) x position (in bytes [0-79])
-  hero_y:   .db #80  ;;-- (+1) y posicion (in pixels [0-199])
-  hero_w:   .db #4   ;;-- (+2) Width in bytes
-  hero_h:   .db #12   ;;--(+3) Height in bytes
-  hero_sprite: .dw #_sprite_smily ;;-- (+4) Pointer to the sprite
-  hero_jump: .db #-1  ;;-- Are we jumping? 
-
-hero2_data:
-     .db #60  ;;-- (+0) x position (in bytes [0-79])
-     .db #40  ;;-- (+1) y posicion (in pixels [0-199])
-     .db #4   ;;-- (+2) Width in bytes
-     .db #12   ;;--(+3) Height in bytes
-     .dw #0000 ;;-- (+4) Pointer to the sprite
-
+defineEntity hero, 39, 80, 4, 12, _sprite_smily
+defineEntity hero2, 39, 60, 4, 12, _sprite_smily
 
 ;;-- Jump table
 jumptable: 
@@ -67,9 +72,11 @@ hero_update::
 ;; DESTROYS: AF, BC, HL
 ;;=======================
 hero_draw::
+  ld a,#1
   ld ix, #hero_data
   call entityDraw 
 
+  ld a,#1
   ld ix, #hero2_data
   call entityDraw
   ret
@@ -80,26 +87,9 @@ hero_draw::
 ;;=======================
 hero_erase::
 
-  ;;-- Convert the hero_x, hero_y variables into
-  ;;-- the corresponding address in the Video memory
-  ld   de, #0xC000  ;;-- Video initial address
-  ld    a,(hero_x)
-  ld    c,a         ;;-- Hero x position
-  ld    a,(hero_y)
-  ld    b,a         ;;-- Hero y position
-  call cpct_getScreenPtr_asm
-
-  ;; HL contains the video address
-  ;; move it to the DE register
-  ex de, hl
-
-  ;; Draw a Box (our hero!)
-  ld     a, (hero_w)
-  ld     c, a          ;; c = Hero width
-  ld     a, (hero_h) 
-  ld     b, a          ;; b = Hero height
-  ld     a, #0x00      ;; Color pattern: 0 (Black!)
-  call  cpct_drawSolidBox_asm
+  ld a,#0
+  ld ix, #hero_data
+  call entityDraw 
   ret
 
 
@@ -112,29 +102,42 @@ hero_erase::
 ;;==============================
 ;; Draw an entity
 ;; INPUTS:
+;;   A : IF a==0, the entity is erased
 ;;   IX: Pointer to the entity
 ;;==============================
 entityDraw:
+
+  push AF
+
   ;;-- Convert the entity's x and y coordinates into Video memory address
-  ld a,0(IX)  
-  ld c,a          ;;-- C = entity.x
-  ld a,1(IX)
-  ld b,a          ;;-- B = entity.y
-  ld de, #0xC000  ;;-- Initial video address
+  ld  a ,Ent_x(IX)  
+  ld  c ,a          ;;-- C = entity.x
+  ld  a ,Ent_y(IX)
+  ld  b ,a          ;;-- B = entity.y
+  ld  de, #0xC000  ;;-- Initial video address
   call cpct_getScreenPtr_asm
 
   ;; HL contains the video address
   ;; move it to the DE register
-  ex de, hl
+  ex  de, hl
+
+  ld  b, Ent_h(IX)   ;;-- B = entity.h
+  ld  c, Ent_w(IX)   ;;-- B = entity.w
+
+  pop af
+  cp #0   ; A==0? 
+  jr z, erase_entity
 
   ;;-- Draw the entity
-  ld l, 4(IX)   ;;|
-  ld h, 5(IX)   ;;| HL = entity.spritePtr
+  ld l, Ent_spr_l(IX)   ;;|
+  ld h, Ent_spr_h(IX)   ;;| HL = entity.spritePtr
 
-  ld b, 3(IX)   ;;-- B = entity.h
-  ld c, 2(IX)   ;;-- B = entity.w
   call  cpct_drawSprite_asm
   ret
+
+  erase_entity:
+    call  cpct_drawSolidBox_asm
+    ret
 
 
 ;;=============================================
