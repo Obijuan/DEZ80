@@ -8,11 +8,10 @@
 .globl _g_tileset
 .globl _level0
 
-;;===============================
-;;  Main program entry
-;;===============================
-_main::
-
+;;============================================
+;; GAME INITIALIZATION
+;;============================================
+initialize_game:
   ;;-- Disable Amstrad firmware. Needed for changing
   ;;-- the video mode
   call cpct_disableFirmware_asm
@@ -26,6 +25,7 @@ _main::
   ld de, #16
   call cpct_setPalette_asm
 
+  ;;-- Draw the map
   ;;-- Configure the tileset
   ld hl,#_g_tileset
   call cpct_etm_setTileset2x4_asm
@@ -39,6 +39,13 @@ _main::
   ld de,#0x2028   ;;-- Height/Width in tiles (of the map)
   ld a,#0x28      ;;-- Number of tiles in the row
   call cpct_etm_drawTileBox2x4_asm  ;; Draw the map!!
+  ret
+
+;;===============================
+;;  Main program entry
+;;===============================
+_main::
+  call initialize_game
 
   main_loop:
 

@@ -10,11 +10,21 @@
 .globl _sprite_smily
 
 ;;-- HERO DATA
-hero_x:   .db #39  ;;-- x position (in bytes [0-79])
-hero_y:   .db #80  ;;-- y posicion (in pixels [0-199])
-hero_w:   .db #4   ;;-- Width in bytes
-hero_h:   .db #12   ;;-- Height in bytes
-hero_jump: .db #-1  ;;-- Are we jumping? 
+hero_data:
+  hero_x:   .db #39  ;;-- (+0) x position (in bytes [0-79])
+  hero_y:   .db #80  ;;-- (+1) y posicion (in pixels [0-199])
+  hero_w:   .db #4   ;;-- (+2) Width in bytes
+  hero_h:   .db #12   ;;--(+3) Height in bytes
+  hero_sprite: .dw #_sprite_smily ;;-- (+4) Pointer to the sprite
+  hero_jump: .db #-1  ;;-- Are we jumping? 
+
+hero2_data:
+     .db #60  ;;-- (+0) x position (in bytes [0-79])
+     .db #40  ;;-- (+1) y posicion (in pixels [0-199])
+     .db #4   ;;-- (+2) Width in bytes
+     .db #12   ;;--(+3) Height in bytes
+     .dw #0000 ;;-- (+4) Pointer to the sprite
+
 
 ;;-- Jump table
 jumptable: 
@@ -57,23 +67,11 @@ hero_update::
 ;; DESTROYS: AF, BC, HL
 ;;=======================
 hero_draw::
-  ;;-- Convert the hero_x, hero_y variables into
-  ;;-- the corresponding address in the Video memory
-  ld   de, #0xC000  ;;-- Video initial address
-  ld    a,(hero_x)
-  ld    c,a         ;;-- Hero x position
-  ld    a,(hero_y)
-  ld    b,a         ;;-- Hero y position
-  call cpct_getScreenPtr_asm
+  ld ix, #hero_data
+  call entityDraw 
 
-  ;; HL contains the video address
-  ;; move it to the DE register
-  ex de, hl
-
-  ;; Draw our hero
-  ld    hl, #_sprite_smily
-  ld    bc, #0x0C04    ;; Height, Width: 8x12 pixels
-  call  cpct_drawSprite_asm      
+  ld ix, #hero2_data
+  call entityDraw
   ret
 
 ;;======================
@@ -110,6 +108,34 @@ hero_erase::
 ;; PRIVATE FUNCTIONS
 ;;=============================================
 ;;=============================================
+
+;;==============================
+;; Draw an entity
+;; INPUTS:
+;;   IX: Pointer to the entity
+;;==============================
+entityDraw:
+  ;;-- Convert the entity's x and y coordinates into Video memory address
+  ld a,0(IX)  
+  ld c,a          ;;-- C = entity.x
+  ld a,1(IX)
+  ld b,a          ;;-- B = entity.y
+  ld de, #0xC000  ;;-- Initial video address
+  call cpct_getScreenPtr_asm
+
+  ;; HL contains the video address
+  ;; move it to the DE register
+  ex de, hl
+
+  ;;-- Draw the entity
+  ld l, 4(IX)   ;;|
+  ld h, 5(IX)   ;;| HL = entity.spritePtr
+
+  ld b, 3(IX)   ;;-- B = entity.h
+  ld c, 2(IX)   ;;-- B = entity.w
+  call  cpct_drawSprite_asm
+  ret
+
 
 ;;=============================================
 ;; moveHeroRight: Move the hero to the right
