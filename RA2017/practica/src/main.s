@@ -2,6 +2,7 @@
 .area _CODE
 
 .include "hero.h.s"
+.include "ball.h.s"
 .include "obstacle.h.s"
 .include "cpctelera.h.s"
 .globl _sprite_palette
@@ -51,9 +52,11 @@ _main::
 
     call hero_erase     ;; Erase the hero
     call obstacle_erase ;; Erase the bullet
+    call ball_erase     ;; Erase the ball
 
     call hero_update     ;; Update the Hero
     call obstacle_update ;; Update the bullet
+    call ball_update     ;; Update the ball
 
     ;;-- Check colision
     call hero_getPtrHL
@@ -65,6 +68,7 @@ _main::
 
     call hero_draw      ;;-- Draw the hero
     call obstacle_draw  ;;-- Draw the bullet
+    call ball_draw      ;;-- Draw the ball
   
     ;;-- Wait for the raster to finish
     call cpct_waitVSYNC_asm

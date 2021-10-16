@@ -71,3 +71,6 @@ $(eval $(call IMG2SPRITES,assets/smily.png,0,sprite,8,12,$(PALETTE),,src/sprites
 
 #-- Tiles generation
 $(eval $(call IMG2SPRITES,assets/tiles8x8.png,0,g,4,4,$(PALETTE),tileset,src/sprites/,))
+
+#-- ball sprite
+$(eval $(call IMG2SPRITES,assets/ball.png,0,sprite,4,4,$(PALETTE),,src/sprites/,))
