@@ -6,20 +6,21 @@
 ;;==============================================
 ;;==============================================
 
+;;-- Data for drawing the sprite
 .globl _sprite_smily
 
 ;;-- HERO DATA
 hero_x:   .db #39  ;;-- x position (in bytes [0-79])
 hero_y:   .db #80  ;;-- y posicion (in pixels [0-199])
-hero_w:   .db #2   ;;-- Width in bytes
-hero_h:   .db #8   ;;-- Height in bytes
+hero_w:   .db #4   ;;-- Width in bytes
+hero_h:   .db #12   ;;-- Height in bytes
 hero_jump: .db #-1  ;;-- Are we jumping? 
 
 ;;-- Jump table
 jumptable: 
-  .db #-3, #-2, #-1, #-1
-  .db #-1,  #0,  #0, #0
-  .db #1,  #2,  #2, #3
+  .db #-3, #-3, #-2, #-2, #-1, #-1
+  .db #0,  #0, #0, #0
+  .db #1, #1, #2,  #2, #3, #3
   .db #0x80
 
 ;;-- CPCtelera symbols
@@ -56,9 +57,23 @@ hero_update::
 ;; DESTROYS: AF, BC, HL
 ;;=======================
 hero_draw::
-  ;;-- Draw the hero :)
-  ld a,#0xFF            ;; Color pattern: red
-  call drawHero         
+  ;;-- Convert the hero_x, hero_y variables into
+  ;;-- the corresponding address in the Video memory
+  ld   de, #0xC000  ;;-- Video initial address
+  ld    a,(hero_x)
+  ld    c,a         ;;-- Hero x position
+  ld    a,(hero_y)
+  ld    b,a         ;;-- Hero y position
+  call cpct_getScreenPtr_asm
+
+  ;; HL contains the video address
+  ;; move it to the DE register
+  ex de, hl
+
+  ;; Draw our hero
+  ld    hl, #_sprite_smily
+  ld    bc, #0x0C04    ;; Height, Width: 8x12 pixels
+  call  cpct_drawSprite_asm      
   ret
 
 ;;======================
@@ -81,8 +96,11 @@ hero_erase::
   ex de, hl
 
   ;; Draw a Box (our hero!)
+  ld     a, (hero_w)
+  ld     c, a          ;; c = Hero width
+  ld     a, (hero_h) 
+  ld     b, a          ;; b = Hero height
   ld     a, #0x00      ;; Color pattern: 0 (Black!)
-  ld    bc, #0x0C04    ;; Height, Width: 12x8 pixels
   call  cpct_drawSolidBox_asm
   ret
 
@@ -100,10 +118,16 @@ hero_erase::
 ;; DESTROYS:
 ;;=============================================
 moveHeroRight:
-  ld a, (hero_x)  ;;-- A =  hero_x
-
   ;;- Check if the hero_x has reached its maximum value
-  cp #80-2                 ;; Check against right limit
+  ;;-- We should check the possition 80 - hero.width
+  ld a, (hero_w)
+  ld b,a
+  ld a, #80
+  sub b          ;;-- A = 80 - hero_w
+  ld b,a         ;;-- B = 80 - hero_w
+
+  ld a, (hero_x) ;;-- A = hero_x
+  cp b                 ;; hero_x == 80-hero_w?
   jr z,do_not_move_r      
 
     ;;- No max reached: increase the hero_x by 1
@@ -233,32 +257,5 @@ checkUserInput:
   w_not_pressed:
   ret
 
-;;===============================
-;; drawHero
-;;
-;; INPUT:
-;;   A => Color Pattern
-;;
-;; DESTROYs: AF, BC, DE, HL
-;;===============================
-drawHero:
-
-  ;;-- Convert the hero_x, hero_y variables into
-  ;;-- the corresponding address in the Video memory
-  ld   de, #0xC000  ;;-- Video initial address
-  ld    a,(hero_x)
-  ld    c,a         ;;-- Hero x position
-  ld    a,(hero_y)
-  ld    b,a         ;;-- Hero y position
-  call cpct_getScreenPtr_asm
-
-  ;; HL contains the video address
-  ;; move it to the DE register
-  ex de, hl
-
-  ;; Draw a Box (our hero!)
-  ld    hl, #_sprite_smily
-  ld    bc, #0x0C04    ;; Height, Width: 8x12 pixels
-  call  cpct_drawSprite_asm
-  ret
+  
 
