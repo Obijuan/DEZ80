@@ -69,6 +69,9 @@ PALETTE={0 1 3 4 7 9 10 12 13 16 19 20 21 24 25 26}
 #-- Smily sprite
 $(eval $(call IMG2SPRITES,assets/smily.png,0,sprite,8,12,$(PALETTE),,src/sprites/,hwpalette))
 
+#-- Smily sprite
+$(eval $(call IMG2SPRITES,assets/smily_1.png,0,sprite,8,12,$(PALETTE),,src/sprites/,))
+
 #-- Tiles generation
 $(eval $(call IMG2SPRITES,assets/tiles8x8.png,0,g,4,4,$(PALETTE),tileset,src/sprites/,))
 
