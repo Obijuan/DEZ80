@@ -10,6 +10,8 @@
 .globl _sprite_smily
 .globl _sprite_smily_1
 
+.equ CNT_INI, 20
+
 .macro defineEntity name, x, y, w, h, spr, spr1
   name'_data:
   name'_x:        .db x    ;;-- position (in bytes [0-79])
@@ -19,7 +21,8 @@
   name'_sprite:   .dw spr  ;;-- (+4) Pointer to the sprite
   name'_sprite_1: .dw spr1 ;;-- Secon sprite
   name'__sn:      .db 0    ;;-- Sprite number to draw (0,1)
-  name'_jump:     .db #-1  ;;-- Are we jumping? 
+  name'_cnt:      .db CNT_INI    ;;-- Animation counter
+  name'_jump:    .db #-1  ;;-- Are we jumping? 
 .endm
 
 .equ Ent_x, 0
@@ -28,10 +31,11 @@
 .equ Ent_h, 3
 .equ Ent_spr_l, 4
 .equ Ent_spr_h, 5
-.equ Ent_spr_l_1, 6
-.equ Ent_spr_h_1, 7
+.equ Ent_spr_l1, 6
+.equ Ent_spr_h1, 7
 .equ Ent_sn, 8
-.equ Ent_jmp, 9
+.equ Ent_cnt,  9
+.equ Ent_jmp, 10
 
 ;;-- HERO DATA
 defineEntity hero, 39, 80, 4, 12, _sprite_smily, _sprite_smily_1
@@ -134,17 +138,52 @@ entityDraw:
   cp #0   ; A==0? 
   jr z, erase_entity
 
+  ;;-- Check the current counter
+  ld a, Ent_cnt(ix)
+  cp #0    ;-- Is it 0?
+
+  jr z,counter_0
+
+  ;;-- Counter not zero. Just print
+  ;;-- the current sprite
+
+  ;;-- Decrement the counter
+  dec Ent_cnt(ix)
+
+  jr draw_current
+
+  ;;-- Counter 0. Change the current sprite
+  counter_0:
+  ld a, Ent_sn(ix)
+  xor #1
+  ld Ent_sn(ix),a
+  ld a,#CNT_INI
+  ld Ent_cnt(ix),a
+    
+
+  draw_current:
   ;;-- Draw the entity. Depending on the value of
   ;;-- the sn, sprite 0 or sprinte 1 is drawn
   ld a, Ent_sn(ix)      ;;-- Read the spite number to draw
 
-  ;;-- TODO!!!
+  cp #0   ;;-- Is it sprite 0?
+  jr z,draw_sprite_0
 
-  ld l, Ent_spr_l(IX)   ;;|
-  ld h, Ent_spr_h(IX)   ;;| HL = entity.spritePtr
+  ;-- It is sprite 1. Draw it!
+  ld l, Ent_spr_l1(IX)   ;;|
+  ld h, Ent_spr_h1(IX)   ;;| HL = entity.spritePtr
+  jr draw_sprite
 
-  call  cpct_drawSprite_asm
-  ret
+  ;-- It is sprite 0. Draw it
+  draw_sprite_0:
+    ld l, Ent_spr_l(IX)   ;;|
+    ld h, Ent_spr_h(IX)   ;;| HL = entity.spritePtr
+    jr draw_sprite
+
+   draw_sprite:
+    ld Ent_sn(ix), a    ;; Store the next sprite number
+    call  cpct_drawSprite_asm
+    ret
 
   erase_entity:
     call  cpct_drawSolidBox_asm
