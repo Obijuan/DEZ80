@@ -10,7 +10,7 @@
 .globl _sprite_smily
 .globl _sprite_smily_1
 
-.equ CNT_INI, 20
+.equ CNT_INI, 8
 
 .macro defineEntity name, x, y, w, h, spr, spr1
   name'_data:
@@ -74,6 +74,8 @@ hero_getPtrHL::
 ;;=======================
 hero_update::
   call jumpControl      ;;-- Do jumps
+
+  ld ix, #hero_data
   call checkUserInput   ;; Check if user pressed keys
   ret
 
@@ -142,23 +144,23 @@ entityDraw:
   ld a, Ent_cnt(ix)
   cp #0    ;-- Is it 0?
 
-  jr z,counter_0
+  ;;jr z,counter_0
 
   ;;-- Counter not zero. Just print
   ;;-- the current sprite
 
   ;;-- Decrement the counter
-  dec Ent_cnt(ix)
+  ;dec Ent_cnt(ix)
 
   jr draw_current
 
   ;;-- Counter 0. Change the current sprite
-  counter_0:
-  ld a, Ent_sn(ix)
-  xor #1
-  ld Ent_sn(ix),a
-  ld a,#CNT_INI
-  ld Ent_cnt(ix),a
+  ;;counter_0:
+  ;ld a, Ent_sn(ix)
+  ;xor #1
+  ;ld Ent_sn(ix),a
+  ;ld a,#CNT_INI
+  ;ld Ent_cnt(ix),a
     
 
   draw_current:
@@ -190,6 +192,31 @@ entityDraw:
     ret
 
 
+;;=========================================
+;;  Update the hero counter. When it reachs  
+;;  0 the sprite is changed
+;;==========================================
+update_cnt:
+  ;;-- Check the current counter
+  ld a, Ent_cnt(ix)
+  cp #0    ;-- Is it 0?
+
+  jr z,counter_0
+
+  ;;-- Counter not zero
+  ;;-- Decrement the counter
+  dec Ent_cnt(ix)
+  ret
+
+  ;;-- Counter 0. Change the current sprite
+  counter_0:
+    ld a, Ent_sn(ix)
+    xor #1
+    ld Ent_sn(ix),a
+    ld a,#CNT_INI
+    ld Ent_cnt(ix),a
+  ret
+
 ;;=============================================
 ;; moveHeroRight: Move the hero to the right
 ;;  (inside the line limits)
@@ -212,6 +239,7 @@ moveHeroRight:
     ;;- No max reached: increase the hero_x by 1
     inc a           ;;-- A = A + 1
     ld (hero_x),a   ;;-- hero_x = A
+    call update_cnt
 
   do_not_move_r:
   ret
@@ -232,6 +260,7 @@ moveHeroLeft:
   ;;-- Decrease the hero_x
   dec a
   ld (hero_x), a
+  call update_cnt
 
   do_not_move_l:
   ret
