@@ -15,25 +15,22 @@ play_music: .db #12
 color: .db 0x10
 
 isr:: 
-  ret
 
-;
-;    ld l, #16  ;;-- Establecer color del borde
-;    ld a, (color)
-;    ld h, a
-;    call cpct_setPALColour_asm
-;
-;    ld a, (color)
-;    inc a
-;    cp #0x16
-;
-;    jr nz, continue
-;
-;      ;;-- Reset color
-;      ld a, #0x10
-;   
-;    continue:
-;      ld (color),a 
+  ld l, #16  ;;-- Establecer color del borde
+  ld a, (color)
+  ld h, a
+  call cpct_setPALColour_asm
+  ld a, (color)
+  inc a
+  cp #0x16
+  jr nz, continue
+    ;;-- Reset color
+    ld a, #0x10
+ 
+  continue:
+    ld (color),a 
+
+  ret
 ;
 ;  ex af, af'
 ;  push af
