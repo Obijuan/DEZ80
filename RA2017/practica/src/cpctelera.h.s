@@ -16,5 +16,9 @@
 .globl cpct_setPalette_asm
 .globl cpct_etm_setTileset2x4_asm
 .globl cpct_etm_drawTileBox2x4_asm
+.globl cpct_akp_musicInit_asm
+.globl cpct_akp_musicPlay_asm
+.globl cpct_setInterruptHandler_asm
+.globl cpct_setPALColour_asm
 
 

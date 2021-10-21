@@ -8,7 +8,63 @@
 .globl _sprite_palette
 .globl _g_tileset
 .globl _level0
+.globl _song_princess7
 
+; -- 1 out of 12 int the music is called
+play_music: .db #12
+color: .db 0x10
+
+isr:: 
+  ret
+
+;
+;    ld l, #16  ;;-- Establecer color del borde
+;    ld a, (color)
+;    ld h, a
+;    call cpct_setPALColour_asm
+;
+;    ld a, (color)
+;    inc a
+;    cp #0x16
+;
+;    jr nz, continue
+;
+;      ;;-- Reset color
+;      ld a, #0x10
+;   
+;    continue:
+;      ld (color),a 
+;
+;  ex af, af'
+;  push af
+;  push iy
+;  exx
+;  push bc
+;  push de
+;  push hl
+;
+;    ;;-- Toggle the play_music variable
+;    ld a,(play_music)
+;    dec a
+;    ld (play_music), a
+;
+;    jr nz, volver
+;    
+;    ;;-- Update the music!
+;    ;;-- It is refresh at the rate speed of 25Hz
+;    call cpct_akp_musicPlay_asm
+;    ld a, #12
+;    ld (play_music), a
+;
+;  volver:
+;    pop hl
+;    pop de
+;    pop bc
+;    exx
+;    pop iy
+;    pop af
+;    ex af, af'
+;  ret
 
 ;;============================================
 ;; GAME INITIALIZATION
@@ -26,6 +82,14 @@ initialize_game:
   ld hl, #_sprite_palette
   ld de, #16
   call cpct_setPalette_asm
+
+  ;;-- Initialize the music
+  ld DE, #_song_princess7
+  call cpct_akp_musicInit_asm
+
+  ;;-- Set ISR
+  ld hl, #isr
+  call cpct_setInterruptHandler_asm
 
   ;;-- Draw the map
   ;;-- Configure the tileset
@@ -70,8 +134,40 @@ _main::
     call hero_draw      ;;-- Draw the hero
     call obstacle_draw  ;;-- Draw the bullet
     call ball_draw      ;;-- Draw the ball
+
+    call hero_draw      ;;-- Draw the hero
+    call obstacle_draw  ;;-- Draw the bullet
+    call ball_draw      ;;-- Draw the ball
+    call hero_draw      ;;-- Draw the hero
+    call obstacle_draw  ;;-- Draw the bullet
+    call ball_draw      ;;-- Draw the ball
+    call hero_draw      ;;-- Draw the hero
+    call obstacle_draw  ;;-- Draw the bullet
+    call ball_draw      ;;-- Draw the ball
+    call hero_draw      ;;-- Draw the hero
+    call obstacle_draw  ;;-- Draw the bullet
+    call ball_draw      ;;-- Draw the ball
+    call hero_draw      ;;-- Draw the hero
+    call obstacle_draw  ;;-- Draw the bullet
+    call ball_draw      ;;-- Draw the ball
+    call hero_draw      ;;-- Draw the hero
+    call obstacle_draw  ;;-- Draw the bullet
+    call ball_draw      ;;-- Draw the ball
+    call hero_draw      ;;-- Draw the hero
+    call obstacle_draw  ;;-- Draw the bullet
+    call ball_draw      ;;-- Draw the ball
+    call hero_draw      ;;-- Draw the hero
+    call obstacle_draw  ;;-- Draw the bullet
+    call ball_draw      ;;-- Draw the ball
+    call hero_draw      ;;-- Draw the hero
+    call obstacle_draw  ;;-- Draw the bullet
+    call ball_draw      ;;-- Draw the ball
+    call hero_draw      ;;-- Draw the hero
+    call obstacle_draw  ;;-- Draw the bullet
+    call ball_draw      ;;-- Draw the ball
   
     ;;-- Wait for the raster to finish
     call cpct_waitVSYNC_asm
-    
-    jr main_loop
+
+    jp main_loop
+
