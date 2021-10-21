@@ -14,54 +14,52 @@
 play_music: .db #12
 color: .db 0x10
 
-isr:: 
-
-  ld l, #16  ;;-- Establecer color del borde
-  ld a, (color)
-  ld h, a
-  call cpct_setPALColour_asm
-  ld a, (color)
-  inc a
-  cp #0x16
-  jr nz, continue
-    ;;-- Reset color
-    ld a, #0x10
- 
-  continue:
-    ld (color),a 
-
-  ret
+; isr:: 
 ;
-;  ex af, af'
-;  push af
-;  push iy
-;  exx
-;  push bc
-;  push de
-;  push hl
+;  ld l, #16  ;;-- Establecer color del borde
+;  ld a, (color)
+;  ld h, a
+;  call cpct_setPALColour_asm
+;  ld a, (color)
+;  inc a
+;  cp #0x16
+;  jr nz, continue
+;    ;;-- Reset color
+;    ld a, #0x10
+; 
+;  continue:
+;    ld (color),a 
 ;
-;    ;;-- Toggle the play_music variable
-;    ld a,(play_music)
-;    dec a
-;    ld (play_music), a
-;
-;    jr nz, volver
-;    
-;    ;;-- Update the music!
-;    ;;-- It is refresh at the rate speed of 25Hz
-;    call cpct_akp_musicPlay_asm
-;    ld a, #12
-;    ld (play_music), a
-;
-;  volver:
-;    pop hl
-;    pop de
-;    pop bc
-;    exx
-;    pop iy
-;    pop af
-;    ex af, af'
 ;  ret
+
+isr:
+  ex af, af'
+  exx
+  push af
+  push iy
+  push bc
+  push de
+  push hl
+    ;;-- Toggle the play_music variable
+    ld a,(play_music)
+    dec a
+    ld (play_music), a
+    jr nz, volver
+    
+    ;;-- Update the music!
+    ;;-- It is refresh at the rate speed of 25Hz
+    call cpct_akp_musicPlay_asm
+    ld a, #12
+    ld (play_music), a
+  volver:
+    pop hl
+    pop de
+    pop bc
+    pop iy
+    pop af
+    exx
+    ex af, af'
+  ret
 
 ;;============================================
 ;; GAME INITIALIZATION
