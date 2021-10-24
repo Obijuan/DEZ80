@@ -4,10 +4,9 @@
 .include "hero.h.s"
 .include "ball.h.s"
 .include "obstacle.h.s"
+.include "map.h.s"
 .include "cpctelera.h.s"
 .globl _sprite_palette
-.globl _g_tileset
-.globl _level0
 .globl _song_princess7
 
 ; -- 1 out of 12 int the music is called
@@ -86,20 +85,12 @@ initialize_game:
   ld hl, #isr
   call cpct_setInterruptHandler_asm
 
-  ;;-- Draw the map
-  ;;-- Configure the tileset
-  ld hl,#_g_tileset
-  call cpct_etm_setTileset2x4_asm
+  ;;-- Draw initialize
+  call map_initialize
 
-  ;;-- Draw the level0
-  ld hl, #_level0
-  push hl
-  ld hl,#0xC000
-  push hl
-  ld bc,#0x0000   ;;-- Tile 0,0
-  ld de,#0x2028   ;;-- Height/Width in tiles (of the map)
-  ld a,#0x28      ;;-- Number of tiles in the row
-  call cpct_etm_drawTileBox2x4_asm  ;; Draw the map!!
+  ;;-- Draw the map
+  call map_draw
+
   ret
 
 ;;===============================
