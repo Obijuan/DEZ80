@@ -4,7 +4,7 @@
 .include "hero.h.s"
 .include "ball.h.s"
 .include "obstacle.h.s"
-.include "map.h.s"
+.include "map2.h.s"
 .include "cpctelera.h.s"
 .globl _sprite_palette
 .globl _song_princess7
@@ -85,11 +85,11 @@ initialize_game:
   ld hl, #isr
   call cpct_setInterruptHandler_asm
 
-  ;;-- Draw initialize
-  call map_initialize
+  ;;-- Map initialization
+  call map2_initialize
 
   ;;-- Draw the map
-  call map_draw
+  call map2_draw
 
   ret
 
@@ -102,55 +102,24 @@ _main::
   main_loop:
 
     call hero_erase     ;; Erase the hero
-    call obstacle_erase ;; Erase the bullet
-    call ball_erase     ;; Erase the ball
+    ;call obstacle_erase ;; Erase the bullet
+    ;call ball_erase     ;; Erase the ball
 
     call hero_update     ;; Update the Hero
-    call obstacle_update ;; Update the bullet
-    call ball_update     ;; Update the ball
+    ;call obstacle_update ;; Update the bullet
+    ;call ball_update     ;; Update the ball
 
     ;;-- Check colision
-    call hero_getPtrHL
-    call obstacle_checkCollision
-    ld (0xC000),a        ;;-- Draw collision
-    ld (0xC001),a 
-    ld (0xC002),a
-    ld (0xC003),a
+    ;call hero_getPtrHL
+    ;call obstacle_checkCollision
+    ;ld (0xC000),a        ;;-- Draw collision
+    ;ld (0xC001),a 
+    ;ld (0xC002),a
+    ;ld (0xC003),a
 
     call hero_draw      ;;-- Draw the hero
-    call obstacle_draw  ;;-- Draw the bullet
-    call ball_draw      ;;-- Draw the ball
-
-    call hero_draw      ;;-- Draw the hero
-    call obstacle_draw  ;;-- Draw the bullet
-    call ball_draw      ;;-- Draw the ball
-    call hero_draw      ;;-- Draw the hero
-    call obstacle_draw  ;;-- Draw the bullet
-    call ball_draw      ;;-- Draw the ball
-    call hero_draw      ;;-- Draw the hero
-    call obstacle_draw  ;;-- Draw the bullet
-    call ball_draw      ;;-- Draw the ball
-    call hero_draw      ;;-- Draw the hero
-    call obstacle_draw  ;;-- Draw the bullet
-    call ball_draw      ;;-- Draw the ball
-    call hero_draw      ;;-- Draw the hero
-    call obstacle_draw  ;;-- Draw the bullet
-    call ball_draw      ;;-- Draw the ball
-    call hero_draw      ;;-- Draw the hero
-    call obstacle_draw  ;;-- Draw the bullet
-    call ball_draw      ;;-- Draw the ball
-    call hero_draw      ;;-- Draw the hero
-    call obstacle_draw  ;;-- Draw the bullet
-    call ball_draw      ;;-- Draw the ball
-    call hero_draw      ;;-- Draw the hero
-    call obstacle_draw  ;;-- Draw the bullet
-    call ball_draw      ;;-- Draw the ball
-    call hero_draw      ;;-- Draw the hero
-    call obstacle_draw  ;;-- Draw the bullet
-    call ball_draw      ;;-- Draw the ball
-    call hero_draw      ;;-- Draw the hero
-    call obstacle_draw  ;;-- Draw the bullet
-    call ball_draw      ;;-- Draw the ball
+    ;call obstacle_draw  ;;-- Draw the bullet
+    ;call ball_draw      ;;-- Draw the ball
   
     ;;-- Wait for the raster to finish
     call cpct_waitVSYNC_asm

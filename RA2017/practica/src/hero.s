@@ -88,9 +88,9 @@ hero_draw::
   ld ix, #hero_data
   call entityDraw 
 
-  ld a,#1
-  ld ix, #hero2_data
-  call entityDraw
+  ;ld a,#1
+  ;ld ix, #hero2_data
+  ;call entityDraw
   ret
 
 ;;======================

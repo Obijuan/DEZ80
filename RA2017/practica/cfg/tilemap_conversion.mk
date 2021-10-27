@@ -63,4 +63,5 @@ $(eval $(call TMX2C,assets/level1.tmx,level0,src/niveles/,))
 ## will contain 2 tile IDs.
 ##
 
-#$(eval $(call TMX2C,img/level0b.tmx,g_level0_4bit,src/levels/,4))
+$(eval $(call TMX2C,assets/level0_166.tmx,g2_level0,src/levels/,))
+

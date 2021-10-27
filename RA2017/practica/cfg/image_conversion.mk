@@ -77,3 +77,7 @@ $(eval $(call IMG2SPRITES,assets/tiles8x8.png,0,g,4,4,$(PALETTE),tileset,src/spr
 
 #-- ball sprite
 $(eval $(call IMG2SPRITES,assets/ball.png,0,sprite,4,4,$(PALETTE),,src/sprites/,))
+
+#-- kungfuguns sprintes
+$(eval $(call IMG2SPRITES,assets/tileset0.png,0,g2,4,4,$(PALETTE),tileset,src/tiles/,))
+$(eval $(call IMG2SPRITES,assets/tileset1.png,0,g3,4,4,$(PALETTE),tileset,src/tiles/,))
