@@ -50,7 +50,7 @@ jumptable:
 
 ;;-- CPCtelera symbols
 .include "cpctelera.h.s"
-.include "keyboard/keyboard.s"
+.include "keyboard.h.s"
 
 ;;=============================================
 ;;=============================================

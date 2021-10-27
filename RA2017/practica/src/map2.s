@@ -7,6 +7,7 @@
 ;;==============================================
 
 .include "cpctelera.h.s"
+.include "keyboard.h.s"
 .globl _g2_tileset
 .globl _g2_level0
 
@@ -16,6 +17,32 @@ map2_height = 17  ;
 
 ;;-- Variables
 viewp_ptr:  .dw #_g2_level0  ;;-- Pointer of the viewport
+viewp_x  :  .db 00           ;;-- X coordinate of the viewport offset
+
+
+;;=========================================
+;; Checks keyboard and scrolls the map
+;;=========================================
+map2_update::
+  ;;-- Check for key 'D' being pressed
+  ld hl, #Key_D               ;;-- hl = Key_D Keycode
+  call cpct_isKeyPressed_asm
+  ret z
+
+    ;;-- D is pressed
+    call map2_scrollRight
+  
+  ret
+
+;;=========================================
+;; Scrolls the map to the right
+;;=========================================
+map2_scrollRight::
+  ld hl, (viewp_ptr)
+  inc hl
+  ld (viewp_ptr), hl
+  
+  ret
 
 ;;=========================================
 ;; Map initialization

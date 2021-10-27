@@ -106,6 +106,7 @@ _main::
     ;call ball_erase     ;; Erase the ball
 
     call hero_update     ;; Update the Hero
+    call map2_update      ;; Update the map
     ;call obstacle_update ;; Update the bullet
     ;call ball_update     ;; Update the ball
 
@@ -118,6 +119,7 @@ _main::
     ;ld (0xC003),a
 
     call hero_draw      ;;-- Draw the hero
+    call map2_draw
     ;call obstacle_draw  ;;-- Draw the bullet
     ;call ball_draw      ;;-- Draw the ball
   
