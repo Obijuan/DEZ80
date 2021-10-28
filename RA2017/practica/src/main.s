@@ -6,6 +6,18 @@
 .include "obstacle.h.s"
 .include "map2.h.s"
 .include "cpctelera.h.s"
+
+;;===============================
+;; Macro: Change the border color
+;; Useful for debuging
+;;===============================
+.macro setBorder color
+    ;;-- H: Set the color
+    ;;-- L: 0x10 means Border color
+    ld hl, #0x'color'10  ;-- The character ' is used for concatenating elements
+    call cpct_setPALColour_asm
+.endm
+
 .globl _sprite_palette
 .globl _song_princess7
 
@@ -101,30 +113,68 @@ _main::
 
   main_loop:
 
-    call hero_erase     ;; Erase the hero
-    ;call obstacle_erase ;; Erase the bullet
-    ;call ball_erase     ;; Erase the ball
+    setBorder 1
 
+    call hero_erase     ;; Erase the hero
     call hero_update     ;; Update the Hero
     call map2_update      ;; Update the map
-    ;call obstacle_update ;; Update the bullet
-    ;call ball_update     ;; Update the ball
 
-    ;;-- Check colision
-    ;call hero_getPtrHL
-    ;call obstacle_checkCollision
-    ;ld (0xC000),a        ;;-- Draw collision
-    ;ld (0xC001),a 
-    ;ld (0xC002),a
-    ;ld (0xC003),a
-
+    setBorder 2
     call hero_draw      ;;-- Draw the hero
-    call map2_draw
-    ;call obstacle_draw  ;;-- Draw the bullet
-    ;call ball_draw      ;;-- Draw the ball
+    call hero_draw
+    call hero_draw
+    setBorder 1
+
+    ;call map2_draw
   
     ;;-- Wait for the raster to finish
     call cpct_waitVSYNC_asm
 
     jp main_loop
 
+
+;-- Old main
+;_main::
+;  call initialize_game
+;
+;  main_loop:
+;
+;    setBorder 0
+;
+;    call hero_erase     ;; Erase the hero
+;    ;call obstacle_erase ;; Erase the bullet
+;    ;call ball_erase     ;; Erase the ball
+;
+;    call hero_update     ;; Update the Hero
+;    call map2_update      ;; Update the map
+;
+;    setBorder 2
+;    ;call obstacle_update ;; Update the bullet
+;    ;call ball_update     ;; Update the ball
+;
+;    ;;-- Check colision
+;    ;call hero_getPtrHL
+;    ;call obstacle_checkCollision
+;    ;ld (0xC000),a        ;;-- Draw collision
+;    ;ld (0xC001),a 
+;    ;ld (0xC002),a
+;    ;ld (0xC003),a
+;
+;    call hero_draw      ;;-- Draw the hero
+;
+;    setBorder 0
+;    call map2_draw
+;
+;    
+;    ;call obstacle_draw  ;;-- Draw the bullet
+;    ;call ball_draw      ;;-- Draw the ball
+;  
+;    ;;-- Wait for the raster to finish
+;    call cpct_waitVSYNC_asm
+;
+;    jp main_loop
+;
+;
+;
+;
+;
