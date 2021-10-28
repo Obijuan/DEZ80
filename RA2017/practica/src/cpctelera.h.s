@@ -20,5 +20,6 @@
 .globl cpct_akp_musicPlay_asm
 .globl cpct_setInterruptHandler_asm
 .globl cpct_setPALColour_asm
+.globl cpct_setVideoMemoryPage_asm
 
 

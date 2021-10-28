@@ -100,15 +100,15 @@ initialize_game:
   ;;-- Map initialization
   call map2_initialize
 
-  ;;-- Draw the map
-  call map2_draw
-
   ret
 
 ;;===============================
 ;;  Main program entry
 ;;===============================
 _main::
+  ;;-- Stack initialization
+  ld sp, #0x8000
+
   call initialize_game
 
   main_loop:
@@ -125,10 +125,15 @@ _main::
     call hero_draw
     setBorder 1
 
-    ;call map2_draw
+    call map2_getVieoPtr
+    ex de,hl       ;;-- DE=Pointer to the videoBuffer
+    call map2_draw
   
     ;;-- Wait for the raster to finish
     call cpct_waitVSYNC_asm
+
+    ;;-- Switch the buffers
+    call map2_switchBuffers
 
     jp main_loop
 
