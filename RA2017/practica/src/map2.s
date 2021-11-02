@@ -17,7 +17,7 @@ map2_height = 17  ;
 
 ;;-- Variables
 viewp_ptr:  .dw #_g2_level0  ;;-- Pointer of the viewport
-videoPtr:   .dw #0x8000   ;;-- Video buffer address
+videoPtr:   .dw #0xC000   ;;-- Video buffer address
 viewp_x  :  .db 00           ;;-- X coordinate of the viewport offset
 
 
@@ -114,5 +114,6 @@ map2_switchBuffers::
 ;;============================================
 map2_getVieoPtr::
   ld hl, (videoPtr)
+  ;ld hl, #0xC000
   ret
 

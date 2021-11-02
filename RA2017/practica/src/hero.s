@@ -39,7 +39,7 @@
 
 ;;-- HERO DATA
 defineEntity hero, 39, 80, 4, 12, _sprite_smily, _sprite_smily_1
-defineEntity hero2, 39, 60, 4, 12, _sprite_smily_1, _sprite_smily
+defineEntity hero2, 39, 130, 4, 12, _sprite_smily_1, _sprite_smily
 
 ;;-- Jump table
 jumptable: 
@@ -51,6 +51,7 @@ jumptable:
 ;;-- CPCtelera symbols
 .include "cpctelera.h.s"
 .include "keyboard.h.s"
+.include "map2.h.s"
 
 ;;=============================================
 ;;=============================================
@@ -86,11 +87,14 @@ hero_update::
 hero_draw::
   ld a,#1
   ld ix, #hero_data
+  call map2_getVieoPtr
+  ex de,hl
   call entityDraw 
 
-  ;ld a,#1
-  ;ld ix, #hero2_data
-  ;call entityDraw
+  ld a,#1
+  ld ix, #hero2_data
+  ld de,#0xC000
+  call entityDraw
   ret
 
 ;;======================
@@ -101,6 +105,8 @@ hero_erase::
 
   ld a,#0
   ld ix, #hero_data
+  call map2_getVieoPtr
+  ex de,hl
   call entityDraw 
   ret
 
@@ -116,6 +122,7 @@ hero_erase::
 ;; INPUTS:
 ;;   A : IF a==0, the entity is erased
 ;;   IX: Pointer to the entity
+;;   DE: Video memory location where to draw
 ;;==============================
 entityDraw:
 
@@ -126,7 +133,6 @@ entityDraw:
   ld  c ,a          ;;-- C = entity.x
   ld  a ,Ent_y(IX)
   ld  b ,a          ;;-- B = entity.y
-  ld  de, #0xC000  ;;-- Initial video address
   call cpct_getScreenPtr_asm
 
   ;; HL contains the video address

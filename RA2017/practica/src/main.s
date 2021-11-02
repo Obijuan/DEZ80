@@ -100,6 +100,9 @@ initialize_game:
   ;;-- Map initialization
   call map2_initialize
 
+  ld de,#0xc000
+  call map2_draw
+
   ret
 
 ;;===============================
@@ -113,27 +116,21 @@ _main::
 
   main_loop:
 
-    setBorder 1
-
     call hero_erase     ;; Erase the hero
     call hero_update     ;; Update the Hero
-    call map2_update      ;; Update the map
+    ;call map2_update      ;; Update the map
 
-    setBorder 2
+    ;call map2_getVieoPtr
+    ;ex de,hl       ;;-- DE=Pointer to the videoBuffer
+    ;call map2_draw
+
     call hero_draw      ;;-- Draw the hero
-    call hero_draw
-    call hero_draw
-    setBorder 1
 
-    call map2_getVieoPtr
-    ex de,hl       ;;-- DE=Pointer to the videoBuffer
-    call map2_draw
-  
     ;;-- Wait for the raster to finish
     call cpct_waitVSYNC_asm
 
     ;;-- Switch the buffers
-    call map2_switchBuffers
+    ;call map2_switchBuffers
 
     jp main_loop
 
