@@ -9,6 +9,7 @@
 ;;-- Data for drawing the sprite
 .globl _sprite_smily
 .globl _sprite_smily_1
+.globl _moveEnemy
 
 .equ CNT_INI, 8
 
@@ -78,6 +79,18 @@ hero_update::
 
   ld ix, #hero_data
   call checkUserInput   ;; Check if user pressed keys
+
+  ;;-- POner los parametros en la pila (de derecha a izquierda)
+  ld hl, #hero_data
+  push hl
+  ld hl, #hero2_data
+  push hl
+  call _moveEnemy
+
+  ;;-- Sacar parametros de la pila, porque la función en C 
+  ;;-- debe dejar la pila como estaba (convención)
+  pop af
+  pop af
   ret
 
 ;;======================
@@ -105,6 +118,12 @@ hero_erase::
 
   ld a,#0
   ld ix, #hero_data
+  call map2_getVieoPtr
+  ex de,hl
+  call entityDraw 
+
+  ld a,#0
+  ld ix, #hero2_data
   call map2_getVieoPtr
   ex de,hl
   call entityDraw 

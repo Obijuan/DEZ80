@@ -118,19 +118,10 @@ _main::
 
     call hero_erase     ;; Erase the hero
     call hero_update     ;; Update the Hero
-    ;call map2_update      ;; Update the map
-
-    ;call map2_getVieoPtr
-    ;ex de,hl       ;;-- DE=Pointer to the videoBuffer
-    ;call map2_draw
-
     call hero_draw      ;;-- Draw the hero
 
     ;;-- Wait for the raster to finish
     call cpct_waitVSYNC_asm
-
-    ;;-- Switch the buffers
-    ;call map2_switchBuffers
 
     jp main_loop
 
